@@ -46,12 +46,12 @@ function sortBy<T>(array: T[], getter: (item: T) => string | number): T[] {
 // Available tags to assign to a showcase site
 // Please choose all tags that you think might apply.
 // We'll remove inappropriate tags, but it's less likely that we add tags.
-export type TagType = 
-  | "ai" 
-  | "healthcare" 
-  | "data" 
-  | "cloud" 
-  | "architecture" 
+export type TagType =
+  | "ai"
+  | "healthcare"
+  | "data"
+  | "cloud"
+  | "architecture"
   | "engineering"
   | "llm"
   | "ml"

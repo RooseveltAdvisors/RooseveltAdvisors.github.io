@@ -16,9 +16,9 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/data_analytics.svg").default,
     description: (
       <>
-        15+ years building scalable data platforms and AI solutions across media, healthcare, 
-        and AdTech industries. Expert in real-time analytics systems processing 
-        petabytes of data.
+        15+ years building scalable data platforms and AI solutions across
+        media, healthcare, and AdTech industries. Expert in real-time analytics
+        systems processing petabytes of data.
       </>
     ),
   },
@@ -27,9 +27,9 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/healthcare_it.svg").default,
     description: (
       <>
-        Developed HIPAA-compliant IT systems that reduced clinical documentation time by 62% 
-        and integrated multiple healthcare data standards (FHIR, HL7, CCDA) to process 
-        millions of patient records daily.
+        Developed HIPAA-compliant IT systems that reduced clinical documentation
+        time by 62% and integrated multiple healthcare data standards (FHIR,
+        HL7, CCDA) to process millions of patient records daily.
       </>
     ),
   },
@@ -38,9 +38,9 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/cloud_computing.svg").default,
     description: (
       <>
-        Consistently delivered 50-85% performance improvements through cloud architecture 
-        optimization, ML pipeline efficiencies, and distributed systems engineering 
-        across AWS and Azure environments.
+        Consistently delivered 50-85% performance improvements through cloud
+        architecture optimization, ML pipeline efficiencies, and distributed
+        systems engineering across AWS and Azure environments.
       </>
     ),
   },
