@@ -1,0 +1,179 @@
+facebook:
+  label: Facebook
+  permalink: /facebook
+  description: Facebook tag description
+
+hello:
+  label: Hello
+  permalink: /hello
+  description: Hello tag description
+
+docusaurus:
+  label: Docusaurus
+  permalink: /docusaurus
+  description: Docusaurus tag description
+
+hola:
+  label: Hola
+  permalink: /hola
+  description: Hola tag description
+
+python:
+  label: Python
+  permalink: /tags/python
+  description: Articles about Python programming
+
+fastapi:
+  label: FastAPI
+  permalink: /tags/fastapi
+  description: Content related to the FastAPI framework
+
+ai:
+  label: AI
+  permalink: /tags/ai
+  description: Articles about artificial intelligence and machine learning
+
+sse:
+  label: SSE
+  permalink: /tags/sse
+  description: Server-Sent Events (SSE) implementation and usage
+
+mcp:
+  label: MCP
+  permalink: /tags/mcp
+  description: Model Context Protocol (MCP) content
+
+healthcare:
+  label: Healthcare
+  permalink: /tags/healthcare
+  description: Healthcare technology and applications
+
+agentic-workflow:
+  label: Agentic Workflow
+  permalink: /tags/agentic-workflow
+  description: Content about agentic workflow systems
+
+rag:
+  label: RAG
+  permalink: /tags/rag
+  description: Retrieval Augmented Generation (RAG) techniques and applications
+
+multiagents:
+  label: Multi-agent Systems
+  permalink: /tags/multiagents
+  description: Systems involving multiple AI agents
+
+customer-service:
+  label: Customer Service
+  permalink: /tags/customer-service
+  description: Technologies and strategies for enhancing customer service
+
+agents:
+  label: Agents
+  permalink: /tags/agents
+  description: AI agents and autonomous systems
+
+etl:
+  label: ETL
+  permalink: /tags/etl
+  description: Extract, Transform, Load processes and technologies
+
+automation:
+  label: Automation
+  permalink: /tags/automation
+  description: Tools and approaches for process automation
+
+document-intelligence:
+  label: Document Intelligence
+  permalink: /tags/document-intelligence
+  description: Advanced document processing and understanding techniques
+
+enterprise:
+  label: Enterprise
+  permalink: /tags/enterprise
+  description: Solutions designed for enterprise-scale applications
+
+llm:
+  label: LLM
+  permalink: /tags/llm
+  description: Large Language Models and their applications
+
+semantic-kernel:
+  label: Semantic Kernel
+  permalink: /tags/semantic-kernel
+  description: Content related to Microsoft's Semantic Kernel framework
+
+ai-agents:
+  label: AI Agents
+  permalink: /tags/ai-agents
+  description: Articles about AI agent systems and implementations
+
+enterprise-architecture:
+  label: Enterprise Architecture
+  permalink: /tags/enterprise-architecture
+  description: Enterprise-level architecture designs and patterns
+
+azure:
+  label: Azure
+  permalink: /tags/azure
+  description: Microsoft Azure cloud platform and services
+
+gpu-acceleration:
+  label: GPU Acceleration
+  permalink: /tags/gpu-acceleration
+  description: GPU-accelerated computing and processing techniques
+
+document-processing:
+  label: Document Processing
+  permalink: /tags/document-processing
+  description: Processing and analyzing document content
+
+performance-optimization:
+  label: Performance Optimization
+  permalink: /tags/performance-optimization
+  description: Techniques for improving system performance
+
+microservices:
+  label: Microservices
+  permalink: /tags/microservices
+  description: Microservice architecture and implementations
+
+architecture:
+  label: Architecture
+  permalink: /tags/architecture
+  description: System architecture and design patterns
+
+modular-design:
+  label: Modular Design
+  permalink: /tags/modular-design
+  description: Modular software design approaches and patterns
+
+openai:
+  label: OpenAI
+  permalink: /tags/openai
+  description: OpenAI models and technologies
+
+evaluation:
+  label: Evaluation
+  permalink: /tags/evaluation
+  description: Model and system evaluation techniques
+
+apim:
+  label: APIM
+  permalink: /tags/apim
+  description: API Management solutions and practices
+
+testing:
+  label: Testing
+  permalink: /tags/testing
+  description: Testing methodologies and approaches
+
+enterprise-ai:
+  label: Enterprise AI
+  permalink: /tags/enterprise-ai
+  description: AI solutions for enterprise environments
+
+azure-openai:
+  label: Azure OpenAI
+  permalink: /tags/azure-openai
+  description: Azure OpenAI services and integration

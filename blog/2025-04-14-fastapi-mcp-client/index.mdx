@@ -1,0 +1,129 @@
+---
+slug: fastapi-mcp-client
+title: Supporting SSE for Model Context Protocol (MCP) in Python - Introducing fastapi-mcp-client
+authors: [jon]
+tags: [python, sse, fastapi, mcp, ai]
+image: ./img/mcp-feature.png
+---
+
+I've been working on a project to support SSE for MCP. Couldn't find any good example on the client in Python for supporting SSE with FastAPI MCP. So I wrote it up myself and thought I will share everyone. Hope everyone find it useful.
+
+{/* truncate */}
+
+![MCP overview](/img/blog/fastapi-mcp-client/mcp.png)
+
+# What is the Model Context Protocol?
+
+Model Context Protocol (MCP) is an emerging standard for communication between
+applications and AI models or services. It provides a structured way to:
+
+1. **Establish a session** between client and server
+2. **Call model-powered tools** with parameters
+3. **Process streaming results** in a standardized format
+4. **Maintain context** across multiple interactions
+
+This protocol is particularly valuable for applications that need to interact with AI services while
+supporting streaming responses - a pattern that's becoming increasingly common as models
+generate content incrementally.
+
+# The MCP Flow: How It Works
+
+MCP over Server-Sent Events (SSE) creates a robust pattern for streaming AI responses:
+
+```javascript
+┌────────┐                                   ┌────────┐
+│        │  1. GET /mcp (SSE connection)     │        │
+│        │ ─────────────────────────────────►│        │
+│        │                                   │        │
+│        │  2. SSE: session_id=XXX           │        │
+│        │ ◄─────────────────────────────────│        │
+│        │                                   │        │
+│        │  3. POST /mcp/messages/?session_id│        │
+│ Client │    {method: "initialize"}         │ Server │
+│        │ ─────────────────────────────────►│        │
+│        │                                   │        │
+│        │  4. POST /mcp/messages/?session_id│        │
+│        │    {method: "tools/call", ...}    │        │
+│        │ ─────────────────────────────────►│        │
+│        │                                   │        │
+│        │  5. SSE: streamed results         │        │
+│        │ ◄─────────────────────────────────│        │
+└────────┘                                   └────────┘
+```
+
+This pattern allows for efficient, one-way streaming from server to client with a persistent
+connection, ideal for AI-generated content.
+
+# The Gap in the Python Ecosystem
+
+While FastAPI supports SSE and the MCP server implementation exists, there was a significant
+gap:
+
+* No dedicated Python client libraries for MCP over SSE
+* Challenges in maintaining session state across requests
+* Lack of examples showing proper error handling for stream interruptions
+* No standardized approach for processing the streamed events
+
+These gaps meant developers had to implement complex, error-prone boilerplate code to
+interact with MCP servers.
+
+# Introducing fastapi-mcp-client
+
+The fastapi-mcp-client library solves these problems with a clean, async-first API that
+handles all the complexities of the MCP protocol:
+
+```python
+import asyncio
+from fastapi_mcp_client import MCPClient
+
+async def main():
+    async with MCPClient("http://localhost:8000") as client:
+        # Standard call - simple and clean
+        result = await client.call_operation("echo", {"message": "Hello, MCP!"})
+        print(f"Echo result: {result}")
+
+        # Streaming call - same simple interface
+        stream = await client.call_operation(
+            "generate_numbers",
+            {"count": 5},
+            stream=True
+        )
+
+        async for event in stream:
+            print(f"Event: {event}")
+
+asyncio.run(main())
+```
+
+The library takes care of:
+
+* Establishing and maintaining the SSE connection
+* Session management
+* Protocol message formatting
+* Error handling
+* Processing streaming responses
+
+# Real-World Use Cases
+
+This client excels in several scenarios:
+
+1. **AI-Powered Chat Applications**: Stream token-by-token responses directly to users
+2. **Document Search Systems**: Display search results as they're discovered
+3. **Content Generation**: Show incremental progress for long-running generation tasks
+4. **Data Processing Pipelines**: Stream processed chunks rather than waiting for full completion
+
+# Getting Started
+
+Installation is straightforward with either pip or uv:
+
+```bash
+# Install with pip
+pip install fastapi-mcp-client
+
+# Or with UV
+uv add fastapi-mcp-client
+```
+
+The repository includes example servers and clients to help you get started quickly.
+
+Check out the [GitHub repository](https://github.com/RooseveltAdvisors/fastapi-mcp-client) for more examples and documentation. 

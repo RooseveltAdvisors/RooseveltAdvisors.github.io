@@ -1,0 +1,10 @@
+jon:
+  name: Jon Roosevelt
+  title: Consultant
+  url: https://jonroosevelt.com
+  image_url: https://github.com/RooseveltAdvisors.png
+  page:
+    permalink: "/all-jon-roosevelt-articles"
+  socials:
+    linkedin: jon-roosevelt
+    github: RooseveltAdvisors

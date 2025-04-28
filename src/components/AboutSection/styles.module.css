@@ -1,0 +1,94 @@
+.container {
+  padding: 4rem 0;
+  width: 100%;
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.profileImageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.profileImage {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.bioContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.introText {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.experienceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.experienceItem {
+  padding: 1rem;
+  background-color: var(--ifm-color-emphasis-0);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.experiencePeriod {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-color-primary);
+}
+
+.experienceRole {
+  font-size: 0.9rem;
+}
+
+.bio p {
+  margin-bottom: 1rem;
+}
+
+.ctaContainer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (max-width: 996px) {
+  .container {
+    padding: 3rem 0;
+  }
+  
+  .profileImageContainer {
+    margin-bottom: 2rem;
+  }
+  
+  .experienceGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    margin-bottom: 2rem;
+  }
+} 
