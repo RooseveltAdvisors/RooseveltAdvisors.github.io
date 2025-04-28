@@ -98,7 +98,7 @@ const config: Config = {
       },
       items: [
         {
-          to: "https://us.umami.is/websites/c31542ec-5010-4c26-9acb-391b1c521728",
+          to: "https://cloud.umami.is/share/nl5j9KUNu01VtqfG/jonroosevelt.com",
           label: "Analytics",
           position: "left",
         },
