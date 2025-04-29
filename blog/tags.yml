@@ -237,3 +237,33 @@ optimization:
   label: Optimization
   permalink: /tags/optimization
   description: Content about optimizing performance, resources, and operations
+
+bedrock:
+  label: Bedrock
+  permalink: /tags/bedrock
+  description: Content related to AWS Bedrock services
+
+guardrails:
+  label: Guardrails
+  permalink: /tags/guardrails
+  description: Content related to AI safety guardrails and policies
+
+pii:
+  label: PII
+  permalink: /tags/pii
+  description: Content related to Personally Identifiable Information handling
+
+data-privacy:
+  label: Data Privacy
+  permalink: /tags/data-privacy
+  description: Content related to data privacy principles and practices
+
+ai-safety:
+  label: AI Safety
+  permalink: /tags/ai-safety
+  description: Content related to ensuring the safety and reliability of AI systems
+
+genai:
+  label: GenAI
+  permalink: /tags/genai
+  description: Content related to Generative AI models and applications

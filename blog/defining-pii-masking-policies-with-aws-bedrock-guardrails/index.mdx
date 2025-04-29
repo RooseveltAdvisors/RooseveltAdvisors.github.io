@@ -1,0 +1,144 @@
+---
+title: Defining PII Masking Policies with AWS Bedrock Guardrails
+authors: [jon]
+date: 2024-11-26
+tags: [aws, bedrock, guardrails, pii, data-privacy, ai-safety, llm, genai]
+image: /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image1.png
+---
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image1.png)
+
+## **Introduction**
+
+## **What is Amazon Bedrock Guardrails?**
+
+- Amazon Bedrock Guardrails are a robust feature within the Amazon Bedrock service designed to enhance the safety, compliance, and overall quality of interactions with AI models. Guardrails provide a comprehensive set of tools that allow organizations to define and enforce content policies, ensuring that the AI models deployed adhere to specific guidelines and avoid generating inappropriate, sensitive, or off-topic content.
+
+<!-- truncate -->
+
+**Guardrails support multiple layers of content moderation, including:**
+
+1. **Content Filtering:** Automatically classify and filter out harmful or inappropriate content based on predefined categories such as hate speech, violence, and sexual content. This ensures that the AI models do not engage in or propagate harmful interactions.
+2. **Denied Topics:** Define specific topics that should be blocked in user inputs and model responses. This feature allows for the prohibition of discussions around sensitive or restricted subjects, enhancing compliance with organizational policies.
+3. **Word Filters:** Implement specific word filters to block or mask certain words or phrases in both user inputs and model responses. This includes the ability to enable pre-defined profanity lists or custom lists tailored to organizational needs.
+4. **Sensitive Information Filters:** Redact or mask personally identifiable information (PII) and other sensitive data using predefined types or custom regular expressions (RegEx). This feature helps in protecting user privacy and complying with data protection regulations.
+5. **Custom Messaging:** Define custom messages for blocked prompts and responses, providing clear and consistent feedback to users when content is filtered or denied. This ensures transparency and helps maintain a positive user experience.
+6. **Testing and Tracing:** Test guardrails in real-time with built-in tools that allow for the evaluation of user prompts and model responses. The trace feature provides detailed insights into which guardrails were triggered and the actions taken, enabling continuous improvement and fine-tuning.
+
+## **Architecture Diagram**
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image2.png)
+
+## **Task Details**
+
+1. Sign in to AWS Management Console
+2. Verify access to bedrock foundational model
+3. Create a Guardrail
+4. Add Filters and Blocked Messaging
+5. Test the Guardrail
+6. Validation of the Lab
+
+‍
+
+‍
+
+## ‍ **Task 1: Sign in to AWS Management Console**
+
+1. Click on the **Open Console** button, and you will get redirected to AWS Console in a new browser tab.
+2. Once Signed In to the AWS Management Console, Make the default AWS Region as **US East (N. Virginia) us-east-1**.
+
+## **Task 2: Verify Access to Bedrock Foundational Models**
+
+1\. Make sure you are in the **US East (N. Virginia) us-east-1** Region.
+
+2\. Navigate to **Bedrock** by clicking on the **Services** menu in the top, then click on **Bedrock**.
+
+3\. Click on **Get Started** button.
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image3.png)
+
+4\. From the left menu on Bedrock page select **Model Access**
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image4.png)
+
+5\. The provided model access is granted.
+
+## **Task 3: Create a Guardrail**
+
+1\. Make Sure you are in **N.Virginia(us-east-1) region** only
+
+2\. Navigate to the **Bedrock**, type **Bedrock** in the search bar and select the **CloudFormation** service.
+
+3\. From the left panel, Under **safeguards** select **guardrails**.
+
+4\. Click on the **Create guardrail**.
+
+5\. Enter the name as **Whiz-guardrail**
+
+6\. Click on the **Next** button.
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image5.png)
+
+7\. Click on next next till the **Personally Identifiable Information (PII) types** page.
+
+## **Task 4: Add Filters and Blocked Messaging**
+
+1\. Under **PII types**, select **Add new PII**.
+
+- Add PII Type = Name, with Guardrail Behavior = Mask.
+- Add PII Type = Email, with Guardrail Behavior = Mask.
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image6.png)
+
+2\. Click on the add regex pattern.
+
+- Name: **Purchase ID**
+- Regex Pattern: **(\\W\|^)po\[#\\-\]{0,1}\\s{0,1}\\d{2}\[\\s-\]{0,1}\\d{4}(\\W\|$)**
+- Guardrail Behavior: **Mask**
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image7.png)
+
+3\. Click on the **Confirm**.
+
+4\. Click on **Next** and again **Next**.
+
+5\. Review the details and click on **Create guardrail**.
+
+## **Task 5: Test the Guardrail**
+
+1\. From the **Guardrails list** page, select Whiz-guardrail.
+
+2\. In the **Test** panel on the right, select the **Select model** button.
+
+3\. Use the **Select model** dialog to select a model.
+
+- Select **Anthropic**, then **Claude 2.1**
+- Click **Apply**.
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image8.png)
+
+4\. Test with the following examples in the **Prompt** box:
+
+- **Prompt:** Hi, I am John how i can i help you?
+- Click on **Run** button.
+
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image9.png)
+
+- **Response:** Masked the names with NAME
+- **Prompt:** I am John, the invoice number is PO-22-1234 could you write a message for the order delay
+- Click on the **Run** button.
+
+![]( /img/blog/defining-pii-masking-policies-with-aws-bedrock-guardrails/image10.png)
+
+- **Response:** The purchase id is masked.
+
+### **Do You Know?**
+
+> Amazon Bedrock Guardrails not only allow you to filter content and block sensitive information, but they also support the integration of custom machine learning models to enhance content moderation. This means you can train your own models to detect and manage specific types of content or behavior unique to your application, providing a highly customizable and robust safeguarding solution.
+
+‍
+
+Reference: https://business.whizlabs.com/learn/course/aws-certified-ai-practitioner
+
+‍ 
