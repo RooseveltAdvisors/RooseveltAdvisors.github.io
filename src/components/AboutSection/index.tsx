@@ -78,9 +78,9 @@ export default function AboutSection(): ReactNode {
                   Finally, a bright spot amidst the chaos — the attending
                   provider was exceptional, reassuring us that the fresh cut,
                   finely sliced by a new, sharp knife, was perfectly stitched
-                  back. On the drive home, the idea for Arcs Health took root
-                  in me. Rather than allowing our personal story to fade, I
-                  wanted to use it as a catalyst for change.
+                  back. On the drive home, the idea for Arcs Health took root in
+                  me. Rather than allowing our personal story to fade, I wanted
+                  to use it as a catalyst for change.
                 </p>
 
                 <p>
@@ -95,14 +95,13 @@ export default function AboutSection(): ReactNode {
                 </p>
 
                 <p>
-                  I envisioned a future where waiting times would be
-                  nonexistent in our clinics. I saw our providers spending more
-                  time with patients, free from the usual tedious 'busy-work'
-                  that has become the norm in our healthcare systems. Picture
-                  providers finally say goodbye to 'Pajama Time' notes, freeing
-                  themselves from the headaches of prior authorizations and
-                  eliminating the pressures to squeeze more patient appointments
-                  into the day.
+                  I envisioned a future where waiting times would be nonexistent
+                  in our clinics. I saw our providers spending more time with
+                  patients, free from the usual tedious 'busy-work' that has
+                  become the norm in our healthcare systems. Picture providers
+                  finally say goodbye to 'Pajama Time' notes, freeing themselves
+                  from the headaches of prior authorizations and eliminating the
+                  pressures to squeeze more patient appointments into the day.
                 </p>
               </div>
 
