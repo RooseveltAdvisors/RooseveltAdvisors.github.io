@@ -1,0 +1,209 @@
+---
+slug: fine-tuning-microsoft-phi-2-for-sentiment-analysis
+title: Fine-Tuning Microsoft Phi-2 for Sentiment Analysis - A Step-by-Step Guide
+authors: [jon]
+tags: [llm, fine-tuning, sentiment-analysis, microsoft, phi-2, machine-learning, nlp]
+image: /img/blog/fine-tuning-microsoft-phi-2-for-sentiment-analysis-a-step-by-step-guide/header.jpg
+---
+
+Microsoft Phi-2 Fine Tuning - Learn how to adapt this powerful small language model for sentiment analysis of employee performance data using LoRA and quantization.
+
+{/* truncate */}
+
+![Microsoft Phi-2 Fine Tuning](/img/blog/fine-tuning-microsoft-phi-2-for-sentiment-analysis-a-step-by-step-guide/header.jpg)
+
+# Fine-Tuning Microsoft Phi-2 for Sentiment Analysis: A Step-by-Step Guide
+
+## Introduction
+
+In this comprehensive guide, we'll walk through the process of fine-tuning Microsoft's Phi-2 model for sentiment analysis of employee performance data. We'll cover everything from data preparation to model evaluation, using advanced techniques like LoRA (Low-Rank Adaptation) and quantization.
+
+## Prerequisites
+
+Before we begin, ensure you have the following dependencies installed:
+
+```python
+pip install accelerate peft einops datasets bitsandbytes trl transformers datasets
+```
+
+## 1. Data Preparation
+
+### Loading and Processing the Data
+
+```python
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+# Load data
+filename = "./data/teacher_performance/ReadyToTrain_data_2col_with_subjectivity_final.tsv"
+training_data_df = pd.read_csv(
+    filename,
+    sep='\t',
+    encoding="utf-8",
+    encoding_errors="replace"
+)
+
+# Filter comments longer than 200 characters
+training_data_df = training_data_df[
+    training_data_df['StudentComments'].str.len() > 200
+]
+```
+
+### Creating Balanced Datasets
+
+```python
+# Split data for each sentiment
+X_train = []
+X_test = []
+
+for sentiment in ['positive', 'neutral', 'negative']:
+    train, test = train_test_split(
+        training_data_df[training_data_df['Sentiment'] == sentiment],
+        random_state=42
+    )
+    X_train.append(train)
+    X_test.append(test)
+```
+
+## 2. Model Setup and Quantization
+
+### Configuring the Model
+
+```python
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    BitsAndBytesConfig
+)
+
+# Quantization configuration
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=False,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.float16
+)
+
+# Load model and tokenizer
+base_model = AutoModelForCausalLM.from_pretrained(
+    "microsoft/phi-2",
+    trust_remote_code=True,
+    device_map="auto",
+    quantization_config=bnb_config
+)
+```
+
+## 3. Fine-Tuning with LoRA
+
+### Setting up LoRA Configuration
+
+```python
+from peft import LoraConfig
+
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=16,
+    target_modules=[
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "dense"
+    ],
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+```
+
+### Training Configuration
+
+```python
+training_arguments = TrainingArguments(
+    output_dir="./runs/Sentiment-Analysis-Phi2-fine-tuned",
+    num_train_epochs=50,
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=8,
+    learning_rate=2e-4,
+    weight_decay=0.001,
+    fp16=True
+)
+```
+
+## 4. Model Training and Evaluation
+
+### Training the Model
+
+```python
+sft_trainer = SFTTrainer(
+    model=base_model,
+    train_dataset=train_data,
+    eval_dataset=eval_data,
+    peft_config=lora_config,
+    tokenizer=tokenizer,
+    args=training_arguments
+)
+
+sft_trainer.train()
+```
+
+### Evaluation Metrics
+
+The model showed significant improvements after fine-tuning:
+
+- Overall accuracy increased from 34.9% to 87.2%
+- Positive sentiment accuracy improved from 7.3% to 97.0%
+- Negative sentiment accuracy increased from 11.0% to 84.7%
+- Training loss reduced by 38% (from 1.41 to 0.87)
+
+## 5. Saving and Deploying the Model
+
+```python
+# This code block is used to load the trained model, merge it, and save the merged model.
+merged_model_path = f"{base_dir}/merged_model"
+# 'AutoPeftModelForCausalLM' is a class from the 'peft' library that provides a causal language model with PEFT (Performance Efficient Fine-Tuning) support.
+
+from peft import AutoPeftModelForCausalLM
+
+# 'AutoPeftModelForCausalLM.from_pretrained' is a method that loads a pre-trained model (adapter model) and its base model.
+#  The adapter model is loaded from 'args.output_dir', which is the directory where the trained model was saved.
+# 'low_cpu_mem_usage' is set to True, which means that the model will use less CPU memory.
+# 'return_dict' is set to True, which means that the model will return a 'ModelOutput' (a named tuple) instead of a plain tuple.
+# 'torch_dtype' is set to 'torch.bfloat16', which means that the model will use bfloat16 precision for its computations.
+# 'trust_remote_code' is set to True, which means that the model will trust and execute remote code.
+# 'device_map' is the device map that will be used by the model.
+
+# 'device_map' is a dictionary that maps the model to the GPU device.
+# In this case, the entire model is loaded on GPU 0.
+device_map = {"": 0}
+new_model = AutoPeftModelForCausalLM.from_pretrained(
+    base_dir,
+    low_cpu_mem_usage=True,
+    return_dict=True,
+    torch_dtype=torch.bfloat16, #torch.float16,
+    trust_remote_code=True,
+    device_map=device_map,
+)
+
+# 'new_model.merge_and_unload' is a method that merges the model and unloads it from memory.
+# The merged model is stored in 'merged_model'.
+
+merged_model = new_model.merge_and_unload()
+
+# 'merged_model.save_pretrained' is a method that saves the merged model.
+# The model is saved in the directory "merged_model".
+# 'trust_remote_code' is set to True, which means that the model will trust and execute remote code.
+# 'safe_serialization' is set to True, which means that the model will use safe serialization.
+
+merged_model.save_pretrained(merged_model_path, trust_remote_code=True, safe_serialization=True)
+
+# 'tokenizer.save_pretrained' is a method that saves the tokenizer.
+# The tokenizer is saved in the directory "merged_model".
+
+tokenizer.save_pretrained(merged_model_path)
+```
+
+## Conclusion
+
+Through this fine-tuning process, I've successfully adapted the Microsoft Phi-2 model for sentiment analysis, achieving significant improvements in accuracy across all sentiment categories. The use of LoRA and quantization techniques helped maintain efficiency while improving performance.
+
+The full training code is available on my [GitHub repository](https://github.com/RooseveltAdvisors/jr_playground/blob/main/Phi2%20Fine%20Tuning%20for%20Sentiment%20Analysis.ipynb). If you have any questions, please don't hesitate to email me at rooseveltadvisors@gmail.com. 

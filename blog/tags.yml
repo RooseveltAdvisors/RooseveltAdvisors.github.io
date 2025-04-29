@@ -177,3 +177,63 @@ azure-openai:
   label: Azure OpenAI
   permalink: /tags/azure-openai
   description: Azure OpenAI services and integration
+
+apache-spark:
+  label: Apache Spark
+  permalink: /tags/apache-spark
+  description: Articles about Apache Spark distributed computing engine
+
+big-data:
+  label: Big Data
+  permalink: /tags/big-data
+  description: Content related to big data processing and analytics
+
+data-engineering:
+  label: Data Engineering
+  permalink: /tags/data-engineering
+  description: Topics covering data engineering practices and solutions
+
+phi-2:
+  label: Phi-2
+  permalink: /tags/phi-2
+  description: Content related to Microsoft's Phi-2 small language model
+
+fine-tuning:
+  label: Fine-tuning
+  permalink: /tags/fine-tuning
+  description: Articles about fine-tuning and adapting language models
+
+sentiment-analysis:
+  label: Sentiment Analysis
+  permalink: /tags/sentiment-analysis
+  description: Content about analyzing and classifying sentiment in text
+
+nlp:
+  label: NLP
+  permalink: /tags/nlp
+  description: Natural Language Processing techniques and applications
+
+microsoft:
+  label: Microsoft
+  permalink: /tags/microsoft
+  description: Content related to Microsoft technologies and services
+
+machine-learning:
+  label: Machine Learning
+  permalink: /tags/machine-learning
+  description: Topics covering machine learning algorithms and applications
+
+model-comparison:
+  label: Model Comparison
+  permalink: /tags/model-comparison
+  description: Articles comparing different AI models, approaches, or implementations
+
+aws:
+  label: AWS
+  permalink: /tags/aws
+  description: Content related to Amazon Web Services and its offerings
+
+optimization:
+  label: Optimization
+  permalink: /tags/optimization
+  description: Content about optimizing performance, resources, and operations

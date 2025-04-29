@@ -2,7 +2,7 @@
 slug: semantic-kernel-ai-agent
 title: Architecting Enterprise AI Research Agents with Semantic Kernel
 authors: [jon]
-tags: [semantic kernel, ai agents, enterprise architecture, azure]
+tags: [semantic-kernel, ai-agents, enterprise-architecture, azure]
 image: ./img/semantic-kernel-header.jpg
 ---
 
