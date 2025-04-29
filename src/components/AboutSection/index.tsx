@@ -73,6 +73,37 @@ export default function AboutSection(): ReactNode {
                   knows how much longer that would've taken? So we sat for an
                   agonizing 45 minutes. Something about that didn't feel right.
                 </p>
+
+                <p>
+                  Finally, a bright spot amidst the chaos — the attending
+                  provider was exceptional, reassuring us that the fresh cut,
+                  finely sliced by a new, sharp knife, was perfectly stitched
+                  back. On the drive home, the idea for Arcs Health took root
+                  in me. Rather than allowing our personal story to fade, I
+                  wanted to use it as a catalyst for change.
+                </p>
+
+                <p>
+                  Luckily for my wife, she recovered in a few short weeks.
+                  Before we knew it, she was back on stage. But the whole
+                  incident left us wrestling with a bunch of scary "what ifs":
+                  What if we hadn't been lucky enough to have the right
+                  provider? What if we'd waited 30 minutes longer? What if she
+                  was told her arrival was too late, affecting the optimal
+                  healing of her finger and potentially causing a long-term
+                  impact?
+                </p>
+
+                <p>
+                  I envisioned a future where waiting times would be
+                  nonexistent in our clinics. I saw our providers spending more
+                  time with patients, free from the usual tedious 'busy-work'
+                  that has become the norm in our healthcare systems. Picture
+                  providers finally say goodbye to 'Pajama Time' notes, freeing
+                  themselves from the headaches of prior authorizations and
+                  eliminating the pressures to squeeze more patient appointments
+                  into the day.
+                </p>
               </div>
 
               <div className={styles.experience}>
