@@ -126,7 +126,7 @@ const config: Config = {
           items: [
             {
               label: "LinkedIn",
-              href: "https://www.linkedin.com/in/jon-roosevelt/",
+              href: "https://www.linkedin.com/in/roosevelt-advisors/",
             },
           ],
         },
