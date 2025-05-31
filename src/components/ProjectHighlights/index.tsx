@@ -70,7 +70,7 @@ export default function ProjectHighlights(): ReactNode {
     <>
       {/* Blog Posts Section */}
       <BlogPostsSection />
-      
+
       {/* Featured Projects Section */}
       <section className={styles.container}>
         <div className="container">

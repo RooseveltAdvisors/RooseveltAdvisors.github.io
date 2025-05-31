@@ -10,12 +10,13 @@ const recentBlogPosts = [
   {
     id: "building-aoa-agent-lovable-n8n",
     title: "Building AoA Agent with Lovable and n8n",
-    description: "Learn how to build an AoA (Agent of Agents) using Lovable for the UI and n8n for workflow automation",
+    description:
+      "Learn how to build an AoA (Agent of Agents) using Lovable for the UI and n8n for workflow automation",
     date: "2025-05-31",
     formattedDate: "May 31, 2025",
     permalink: "/blog/2025-05-31-building-aoa-agent-lovable-n8n",
     tags: ["no-code", "lovable", "n8n"],
-    readingTime: 5
+    readingTime: 5,
   },
   {
     id: "fastapi-mcp-client",
@@ -25,22 +26,23 @@ const recentBlogPosts = [
     formattedDate: "April 14, 2025",
     permalink: "/blog/2025-04-14-fastapi-mcp-client",
     tags: ["fastapi", "mcp", "python"],
-    readingTime: 8
+    readingTime: 8,
   },
   {
     id: "modular-ai-agents",
     title: "Modular AI Agents",
-    description: "Design patterns and best practices for building modular AI agent systems",
+    description:
+      "Design patterns and best practices for building modular AI agent systems",
     date: "2025-04-05",
     formattedDate: "April 5, 2025",
     permalink: "/blog/2025-04-05-modular-ai-agents",
     tags: ["ai", "agents", "architecture"],
-    readingTime: 10
-  }
+    readingTime: 10,
+  },
 ];
 
 interface BlogPostCardProps {
-  post: typeof recentBlogPosts[0];
+  post: (typeof recentBlogPosts)[0];
   delay?: number;
 }
 
@@ -67,13 +69,13 @@ function BlogPostCard({ post, delay = 0 }: BlogPostCardProps): ReactNode {
               </span>
             )}
           </div>
-          
+
           <Heading as="h3" className={styles.postTitle}>
             <Link to={post.permalink}>{post.title}</Link>
           </Heading>
-          
+
           <p className={styles.postDescription}>{post.description}</p>
-          
+
           {post.tags.length > 0 && (
             <div className={styles.tags}>
               {post.tags.slice(0, 3).map((tag) => (
@@ -83,7 +85,7 @@ function BlogPostCard({ post, delay = 0 }: BlogPostCardProps): ReactNode {
               ))}
             </div>
           )}
-          
+
           <Link to={post.permalink} className={styles.readMore}>
             Read more →
           </Link>
@@ -106,13 +108,13 @@ export default function BlogPostsSection(): ReactNode {
             Latest Blog Posts
           </Heading>
         </motion.div>
-        
+
         <div className="row">
           {recentBlogPosts.map((post, idx) => (
             <BlogPostCard key={post.id} post={post} delay={idx * 0.2} />
           ))}
         </div>
-        
+
         <motion.div
           className={styles.viewAllContainer}
           initial={{ opacity: 0 }}
@@ -126,4 +128,4 @@ export default function BlogPostsSection(): ReactNode {
       </div>
     </section>
   );
-} 
+}
