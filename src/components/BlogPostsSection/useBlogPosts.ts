@@ -48,45 +48,36 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
     return sortedPosts.map((post) => {
       const metadata = post.metadata || {};
       const frontMatter = metadata.frontMatter || {};
-
+      
       // Extract image URL - newer posts have image: ./img/hero-banner.png in frontmatter
       let imageUrl = frontMatter.image || metadata.image || "";
-
-      // Convert relative path to absolute path
-      if (imageUrl && imageUrl.startsWith("./")) {
-        // Try to get the actual blog folder path from source
-        const sourcePath = metadata.source || "";
-        const blogFolderMatch = sourcePath.match(/blog\/([^\/]+)\//);
-
-        if (blogFolderMatch) {
-          // Use the actual folder name (with date prefix)
-          imageUrl = `/blog/${blogFolderMatch[1]}${imageUrl.substring(1)}`;
-        } else {
-          // Fallback to permalink-based path
+      
+      // For blog posts, we need to construct the static image path
+      if (imageUrl && imageUrl.includes('hero-banner.png')) {
+        // Get the date from metadata
+        const postDate = metadata.date || "";
+        const dateMatch = postDate.match(/^(\d{4}-\d{2}-\d{2})/);
+        
+        if (dateMatch) {
+          // Get the slug from permalink
           const permalink = metadata.permalink || "";
-          const blogPath = permalink.endsWith("/")
-            ? permalink.slice(0, -1)
-            : permalink;
-          imageUrl = blogPath + imageUrl.substring(1);
+          const slug = permalink.split("/").filter(Boolean).pop() || "";
+          
+          // Construct the static image path with date prefix
+          imageUrl = `/img/blog/${dateMatch[1]}-${slug}/hero-banner.png`;
         }
       } else if (!imageUrl) {
-        // Fallback: assume hero-banner.png exists in img folder
-        // Try to get the actual blog folder path from source
-        const sourcePath = metadata.source || "";
-        const blogFolderMatch = sourcePath.match(/blog\/([^\/]+)\//);
-
-        if (blogFolderMatch) {
-          imageUrl = `/blog/${blogFolderMatch[1]}/img/hero-banner.png`;
-        } else {
-          // Last resort: use permalink
+        // Fallback: assume hero-banner.png exists in static img folder
+        const postDate = metadata.date || "";
+        const dateMatch = postDate.match(/^(\d{4}-\d{2}-\d{2})/);
+        
+        if (dateMatch) {
           const permalink = metadata.permalink || "";
-          const blogPath = permalink.endsWith("/")
-            ? permalink.slice(0, -1)
-            : permalink;
-          imageUrl = `${blogPath}/img/hero-banner.png`;
+          const slug = permalink.split("/").filter(Boolean).pop() || "";
+          imageUrl = `/img/blog/${dateMatch[1]}-${slug}/hero-banner.png`;
         }
       }
-
+      
       return {
         id: post.id || metadata.permalink?.split("/").pop() || "",
         title: metadata.title || "",
@@ -129,7 +120,7 @@ function getFallbackPosts(): FeaturedBlogPost[] {
       formattedDate: "May 31, 2025",
       permalink: "/blog/building-aoa-agent-lovable-n8n",
       imageUrl:
-        "/blog/2025-05-31-building-aoa-agent-lovable-n8n/img/hero-banner.png",
+        "/img/blog/2025-05-31-building-aoa-agent-lovable-n8n/hero-banner.png",
       tags: ["no-code", "lovable", "n8n"],
       readingTime: 5,
     },
@@ -140,7 +131,7 @@ function getFallbackPosts(): FeaturedBlogPost[] {
       date: "2025-04-14",
       formattedDate: "April 14, 2025",
       permalink: "/blog/fastapi-mcp-client",
-      imageUrl: "/blog/2025-04-14-fastapi-mcp-client/img/hero-banner.png",
+      imageUrl: "/img/blog/2025-04-14-fastapi-mcp-client/hero-banner.png",
       tags: ["fastapi", "mcp", "python"],
       readingTime: 8,
     },
@@ -152,7 +143,7 @@ function getFallbackPosts(): FeaturedBlogPost[] {
       date: "2025-04-05",
       formattedDate: "April 5, 2025",
       permalink: "/blog/architecting-modular-ai-agents",
-      imageUrl: "/blog/2025-04-05-modular-ai-agents/img/hero-banner.png",
+      imageUrl: "/img/blog/2025-04-05-modular-ai-agents/hero-banner.png",
       tags: ["ai", "agents", "architecture"],
       readingTime: 10,
     },
