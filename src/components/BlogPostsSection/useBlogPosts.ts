@@ -48,23 +48,23 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
     return sortedPosts.map((post) => {
       const metadata = post.metadata || {};
       const frontMatter = metadata.frontMatter || {};
-      
+
       // For blog posts, construct the static image path based on date and slug
       let imageUrl = "";
-      
+
       // Get the date from metadata
       const postDate = metadata.date || "";
       const dateMatch = postDate.match(/^(\d{4}-\d{2}-\d{2})/);
-      
+
       if (dateMatch) {
         // Get the slug from permalink
         const permalink = metadata.permalink || "";
         const slug = permalink.split("/").filter(Boolean).pop() || "";
-        
+
         // All blog images are now in static/img/blog/[date]-[slug]/hero-banner.png
         imageUrl = `/img/blog/${dateMatch[1]}-${slug}/hero-banner.png`;
       }
-      
+
       return {
         id: post.id || metadata.permalink?.split("/").pop() || "",
         title: metadata.title || "",
