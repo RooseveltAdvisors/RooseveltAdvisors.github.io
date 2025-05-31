@@ -2,47 +2,12 @@ import React, { type ReactNode } from "react";
 import Link from "@docusaurus/Link";
 import Heading from "@theme/Heading";
 import { motion } from "framer-motion";
+import type { FeaturedBlogPost } from "@site/src/data/featuredBlogPosts";
+import { useRecentBlogPosts } from "./useBlogPosts";
 import styles from "./styles.module.css";
 
-// Hardcoded blog posts data for now
-// In production, this could be generated at build time
-const recentBlogPosts = [
-  {
-    id: "building-aoa-agent-lovable-n8n",
-    title: "Building AoA Agent with Lovable and n8n",
-    description:
-      "Learn how to build an AoA (Agent of Agents) using Lovable for the UI and n8n for workflow automation",
-    date: "2025-05-31",
-    formattedDate: "May 31, 2025",
-    permalink: "/blog/2025-05-31-building-aoa-agent-lovable-n8n",
-    tags: ["no-code", "lovable", "n8n"],
-    readingTime: 5,
-  },
-  {
-    id: "fastapi-mcp-client",
-    title: "FastAPI MCP Client",
-    description: "Building a FastAPI client for Model Context Protocol (MCP)",
-    date: "2025-04-14",
-    formattedDate: "April 14, 2025",
-    permalink: "/blog/2025-04-14-fastapi-mcp-client",
-    tags: ["fastapi", "mcp", "python"],
-    readingTime: 8,
-  },
-  {
-    id: "modular-ai-agents",
-    title: "Modular AI Agents",
-    description:
-      "Design patterns and best practices for building modular AI agent systems",
-    date: "2025-04-05",
-    formattedDate: "April 5, 2025",
-    permalink: "/blog/2025-04-05-modular-ai-agents",
-    tags: ["ai", "agents", "architecture"],
-    readingTime: 10,
-  },
-];
-
 interface BlogPostCardProps {
-  post: (typeof recentBlogPosts)[0];
+  post: FeaturedBlogPost;
   delay?: number;
 }
 
@@ -58,6 +23,15 @@ function BlogPostCard({ post, delay = 0 }: BlogPostCardProps): ReactNode {
           delay,
         }}
       >
+        {post.imageUrl && (
+          <div className={styles.headerImageContainer}>
+            <img
+              className={styles.headerImage}
+              src={post.imageUrl}
+              alt={`${post.title} blog post`}
+            />
+          </div>
+        )}
         <div className={styles.postContent}>
           <div className={styles.postHeader}>
             <time dateTime={post.date} className={styles.postDate}>
@@ -76,7 +50,7 @@ function BlogPostCard({ post, delay = 0 }: BlogPostCardProps): ReactNode {
 
           <p className={styles.postDescription}>{post.description}</p>
 
-          {post.tags.length > 0 && (
+          {post.tags && post.tags.length > 0 && (
             <div className={styles.tags}>
               {post.tags.slice(0, 3).map((tag) => (
                 <span key={tag} className={styles.tag}>
@@ -96,6 +70,13 @@ function BlogPostCard({ post, delay = 0 }: BlogPostCardProps): ReactNode {
 }
 
 export default function BlogPostsSection(): ReactNode {
+  // Use the custom hook to get the most recent 3 blog posts
+  const recentBlogPosts = useRecentBlogPosts(3);
+
+  if (recentBlogPosts.length === 0) {
+    return null; // Don't render the section if no blog posts
+  }
+
   return (
     <section className={styles.container}>
       <div className="container">
