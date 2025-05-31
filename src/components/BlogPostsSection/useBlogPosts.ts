@@ -1,5 +1,5 @@
-import useGlobalData from '@docusaurus/useGlobalData';
-import type {FeaturedBlogPost} from '@site/src/data/featuredBlogPosts';
+import useGlobalData from "@docusaurus/useGlobalData";
+import type { FeaturedBlogPost } from "@site/src/data/featuredBlogPosts";
 
 interface BlogPost {
   id?: string;
@@ -27,12 +27,14 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
   try {
     // Get global data which includes blog posts
     const globalData = useGlobalData();
-    const blogPluginData = globalData?.['docusaurus-plugin-content-blog']?.['default'] as BlogPluginData;
-    
+    const blogPluginData = globalData?.["docusaurus-plugin-content-blog"]?.[
+      "default"
+    ] as BlogPluginData;
+
     if (!blogPluginData?.blogPosts || blogPluginData.blogPosts.length === 0) {
       return getFallbackPosts();
     }
-    
+
     // Sort by date and get the most recent posts
     const sortedPosts = [...blogPluginData.blogPosts]
       .sort((a, b) => {
@@ -41,60 +43,64 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
         return dateB.getTime() - dateA.getTime();
       })
       .slice(0, count);
-    
+
     // Transform to FeaturedBlogPost format
-    return sortedPosts.map(post => {
+    return sortedPosts.map((post) => {
       const metadata = post.metadata || {};
       const frontMatter = metadata.frontMatter || {};
-      
+
       // Extract image URL - newer posts have image: ./img/hero-banner.png in frontmatter
-      let imageUrl = frontMatter.image || metadata.image || '';
-      
+      let imageUrl = frontMatter.image || metadata.image || "";
+
       // Convert relative path to absolute path
-      if (imageUrl && imageUrl.startsWith('./')) {
+      if (imageUrl && imageUrl.startsWith("./")) {
         // Try to get the actual blog folder path from source
-        const sourcePath = metadata.source || '';
+        const sourcePath = metadata.source || "";
         const blogFolderMatch = sourcePath.match(/blog\/([^\/]+)\//);
-        
+
         if (blogFolderMatch) {
           // Use the actual folder name (with date prefix)
           imageUrl = `/blog/${blogFolderMatch[1]}${imageUrl.substring(1)}`;
         } else {
           // Fallback to permalink-based path
-          const permalink = metadata.permalink || '';
-          const blogPath = permalink.endsWith('/') ? permalink.slice(0, -1) : permalink;
+          const permalink = metadata.permalink || "";
+          const blogPath = permalink.endsWith("/")
+            ? permalink.slice(0, -1)
+            : permalink;
           imageUrl = blogPath + imageUrl.substring(1);
         }
       } else if (!imageUrl) {
         // Fallback: assume hero-banner.png exists in img folder
         // Try to get the actual blog folder path from source
-        const sourcePath = metadata.source || '';
+        const sourcePath = metadata.source || "";
         const blogFolderMatch = sourcePath.match(/blog\/([^\/]+)\//);
-        
+
         if (blogFolderMatch) {
           imageUrl = `/blog/${blogFolderMatch[1]}/img/hero-banner.png`;
         } else {
           // Last resort: use permalink
-          const permalink = metadata.permalink || '';
-          const blogPath = permalink.endsWith('/') ? permalink.slice(0, -1) : permalink;
+          const permalink = metadata.permalink || "";
+          const blogPath = permalink.endsWith("/")
+            ? permalink.slice(0, -1)
+            : permalink;
           imageUrl = `${blogPath}/img/hero-banner.png`;
         }
       }
-      
+
       return {
-        id: post.id || metadata.permalink?.split('/').pop() || '',
-        title: metadata.title || '',
-        description: metadata.description || '',
-        date: metadata.date || '',
+        id: post.id || metadata.permalink?.split("/").pop() || "",
+        title: metadata.title || "",
+        description: metadata.description || "",
+        date: metadata.date || "",
         formattedDate: metadata.formattedDate || formatDate(metadata.date),
-        permalink: metadata.permalink || '',
+        permalink: metadata.permalink || "",
         imageUrl,
         tags: metadata.tags || [],
-        readingTime: metadata.readingTime || 5
+        readingTime: metadata.readingTime || 5,
       };
     });
   } catch (error) {
-    console.warn('Error loading blog posts:', error);
+    console.warn("Error loading blog posts:", error);
     return getFallbackPosts();
   }
 }
@@ -102,10 +108,10 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
 function formatDate(dateString: string): string {
   try {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   } catch {
     return dateString;
@@ -122,7 +128,8 @@ function getFallbackPosts(): FeaturedBlogPost[] {
       date: "2025-05-31",
       formattedDate: "May 31, 2025",
       permalink: "/blog/building-aoa-agent-lovable-n8n",
-      imageUrl: "/blog/2025-05-31-building-aoa-agent-lovable-n8n/img/hero-banner.png",
+      imageUrl:
+        "/blog/2025-05-31-building-aoa-agent-lovable-n8n/img/hero-banner.png",
       tags: ["no-code", "lovable", "n8n"],
       readingTime: 5,
     },
@@ -150,4 +157,4 @@ function getFallbackPosts(): FeaturedBlogPost[] {
       readingTime: 10,
     },
   ];
-} 
+}

@@ -14,4 +14,4 @@ export type FeaturedBlogPost = {
 // which will use Docusaurus's blog plugin to fetch the most recent posts
 const featuredBlogPosts: FeaturedBlogPost[] = [];
 
-export default featuredBlogPosts; 
+export default featuredBlogPosts;
