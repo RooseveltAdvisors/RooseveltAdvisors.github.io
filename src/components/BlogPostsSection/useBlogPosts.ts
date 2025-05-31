@@ -49,33 +49,20 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
       const metadata = post.metadata || {};
       const frontMatter = metadata.frontMatter || {};
       
-      // Extract image URL - newer posts have image: ./img/hero-banner.png in frontmatter
-      let imageUrl = frontMatter.image || metadata.image || "";
+      // For blog posts, construct the static image path based on date and slug
+      let imageUrl = "";
       
-      // For blog posts, we need to construct the static image path
-      if (imageUrl && imageUrl.includes('hero-banner.png')) {
-        // Get the date from metadata
-        const postDate = metadata.date || "";
-        const dateMatch = postDate.match(/^(\d{4}-\d{2}-\d{2})/);
+      // Get the date from metadata
+      const postDate = metadata.date || "";
+      const dateMatch = postDate.match(/^(\d{4}-\d{2}-\d{2})/);
+      
+      if (dateMatch) {
+        // Get the slug from permalink
+        const permalink = metadata.permalink || "";
+        const slug = permalink.split("/").filter(Boolean).pop() || "";
         
-        if (dateMatch) {
-          // Get the slug from permalink
-          const permalink = metadata.permalink || "";
-          const slug = permalink.split("/").filter(Boolean).pop() || "";
-          
-          // Construct the static image path with date prefix
-          imageUrl = `/img/blog/${dateMatch[1]}-${slug}/hero-banner.png`;
-        }
-      } else if (!imageUrl) {
-        // Fallback: assume hero-banner.png exists in static img folder
-        const postDate = metadata.date || "";
-        const dateMatch = postDate.match(/^(\d{4}-\d{2}-\d{2})/);
-        
-        if (dateMatch) {
-          const permalink = metadata.permalink || "";
-          const slug = permalink.split("/").filter(Boolean).pop() || "";
-          imageUrl = `/img/blog/${dateMatch[1]}-${slug}/hero-banner.png`;
-        }
+        // All blog images are now in static/img/blog/[date]-[slug]/hero-banner.png
+        imageUrl = `/img/blog/${dateMatch[1]}-${slug}/hero-banner.png`;
       }
       
       return {
