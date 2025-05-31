@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import projectHighlights, {
   type ProjectHighlight,
 } from "@site/src/data/projectHighlights";
+import BlogPostsSection from "@site/src/components/BlogPostsSection";
 import styles from "./styles.module.css";
 
 function ProjectCard({
@@ -66,23 +67,29 @@ function ProjectCard({
 
 export default function ProjectHighlights(): ReactNode {
   return (
-    <section className={styles.container}>
-      <div className="container">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Heading as="h2" className={styles.title}>
-            Featured Projects
-          </Heading>
-        </motion.div>
-        <div className="row">
-          {projectHighlights.map((project, idx) => (
-            <ProjectCard key={idx} {...project} delay={idx * 0.2} />
-          ))}
+    <>
+      {/* Blog Posts Section */}
+      <BlogPostsSection />
+      
+      {/* Featured Projects Section */}
+      <section className={styles.container}>
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Heading as="h2" className={styles.title}>
+              Featured Projects
+            </Heading>
+          </motion.div>
+          <div className="row">
+            {projectHighlights.map((project, idx) => (
+              <ProjectCard key={idx} {...project} delay={idx * 0.2} />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
