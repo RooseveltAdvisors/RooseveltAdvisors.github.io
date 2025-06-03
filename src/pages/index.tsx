@@ -59,21 +59,6 @@ function HomepageHeader() {
             >
               🌐 View Resume
             </motion.a>
-
-            <motion.a
-              className="button button--secondary button--lg"
-              data-umami-event="Download Resume"
-              href="JON-ROOSEVELT-Resume.pdf"
-              target="_blank"
-              download="Jon-Roosevelt-Resume"
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-            >
-              📥 Download Resume
-            </motion.a>
           </div>
         </motion.div>
       </div>
