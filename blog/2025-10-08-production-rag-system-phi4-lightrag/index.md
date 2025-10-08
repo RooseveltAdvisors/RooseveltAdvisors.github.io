@@ -1,6 +1,5 @@
 ---
 title: "Building an Enterprise RAG System with Local SLMs: My Journey with Phi-4 and LightRAG"
-date: 2025-10-08
 authors: [jon]
 tags: [ai, llm, rag, healthcare, cloud, architecture, data]
 image: /img/blog/production-rag-phi4/hero-banner.png
