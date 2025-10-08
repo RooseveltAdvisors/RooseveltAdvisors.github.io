@@ -16,6 +16,7 @@ const config: Config = {
         disableInDev: true,
       },
     ],
+    "./src/plugins/recent-blog-posts-plugin.ts",
   ],
   scripts: [
     {

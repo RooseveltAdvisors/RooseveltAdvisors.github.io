@@ -1,4 +1,4 @@
-import useGlobalData from "@docusaurus/useGlobalData";
+import { usePluginData } from "@docusaurus/useGlobalData";
 
 export type FeaturedBlogPost = {
   id: string;
@@ -12,93 +12,54 @@ export type FeaturedBlogPost = {
   readingTime?: number;
 };
 
-interface BlogPost {
-  id?: string;
-  metadata?: {
-    title?: string;
-    description?: string;
-    date?: string;
-    formattedDate?: string;
-    permalink?: string;
-    image?: string;
-    frontMatter?: {
-      image?: string;
-    };
-    source?: string;
-    tags?: string[];
-    readingTime?: number;
-  };
+interface BlogListItem {
+  title: string;
+  permalink: string;
+  date: string;
+  unlisted?: boolean;
 }
 
-interface BlogPluginData {
-  blogPosts?: BlogPost[];
+interface RecentPostsPluginData {
+  recentPosts: BlogListItem[];
 }
 
 export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
   try {
-    // Get global data which includes blog posts
-    const globalData = useGlobalData();
-    const blogPluginData = globalData?.["docusaurus-plugin-content-blog"]?.[
-      "default"
-    ] as BlogPluginData;
+    // Get blog posts from our custom plugin that injects them into global data
+    const pluginData = usePluginData(
+      "recent-blog-posts-plugin"
+    ) as RecentPostsPluginData;
 
-    // Debug logging
-    console.log("Global data keys:", Object.keys(globalData || {}));
-    console.log("Blog plugin data:", blogPluginData);
-    console.log("Blog posts count:", blogPluginData?.blogPosts?.length || 0);
-
-    if (!blogPluginData?.blogPosts || blogPluginData.blogPosts.length === 0) {
-      console.error("No blog posts found from Docusaurus plugin");
+    if (!pluginData?.recentPosts || pluginData.recentPosts.length === 0) {
+      console.error("No blog posts found from recent-blog-posts-plugin");
       return [];
     }
 
-    // Sort by date and get the most recent posts
-    const sortedPosts = [...blogPluginData.blogPosts]
-      .sort((a, b) => {
-        const dateA = new Date(a.metadata?.date || 0);
-        const dateB = new Date(b.metadata?.date || 0);
-        return dateB.getTime() - dateA.getTime();
-      })
-      .slice(0, count);
+    // Get the most recent posts (already sorted by date in descending order)
+    const recentPosts = pluginData.recentPosts.slice(0, count);
 
     // Transform to FeaturedBlogPost format
-    return sortedPosts.map((post) => {
-      const metadata = post.metadata || {};
-      const frontMatter = metadata.frontMatter || {};
+    return recentPosts.map((post) => {
+      // Extract slug from permalink
+      const slug = post.permalink.split("/").filter(Boolean).pop() || "";
 
-      // For blog posts, use frontmatter image if available, otherwise construct path
-      let imageUrl = "";
+      // Extract date in YYYY-MM-DD format
+      const postDate = new Date(post.date);
+      const dateStr = postDate.toISOString().split("T")[0];
 
-      // First, check if image is specified in frontmatter
-      if (frontMatter.image) {
-        imageUrl = frontMatter.image;
-      } else if (metadata.image) {
-        imageUrl = metadata.image;
-      } else {
-        // Fallback: construct image path based on date and slug
-        const postDate = metadata.date || "";
-        const dateMatch = postDate.match(/^(\d{4}-\d{2}-\d{2})/);
-
-        if (dateMatch) {
-          // Get the slug from permalink
-          const permalink = metadata.permalink || "";
-          const slug = permalink.split("/").filter(Boolean).pop() || "";
-
-          // Default pattern: static/img/blog/[date]-[slug]/hero-banner.png
-          imageUrl = `/img/blog/${dateMatch[1]}-${slug}/hero-banner.png`;
-        }
-      }
+      // Construct image path: /img/blog/[date]-[slug]/hero-banner.png
+      const imageUrl = `/img/blog/${dateStr}-${slug}/hero-banner.png`;
 
       return {
-        id: post.id || metadata.permalink?.split("/").pop() || "",
-        title: metadata.title || "",
-        description: metadata.description || "",
-        date: metadata.date || "",
-        formattedDate: metadata.formattedDate || formatDate(metadata.date),
-        permalink: metadata.permalink || "",
+        id: slug,
+        title: post.title,
+        description: "", // Not available in minimal post data
+        date: post.date,
+        formattedDate: formatDate(post.date),
+        permalink: post.permalink,
         imageUrl,
-        tags: metadata.tags || [],
-        readingTime: metadata.readingTime || 5,
+        tags: [], // Not available in minimal post data
+        readingTime: 5, // Default value
       };
     });
   } catch (error) {
