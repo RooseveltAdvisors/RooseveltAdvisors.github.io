@@ -42,7 +42,13 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
       "default"
     ] as BlogPluginData;
 
+    // Debug logging
+    console.log("Global data keys:", Object.keys(globalData || {}));
+    console.log("Blog plugin data:", blogPluginData);
+    console.log("Blog posts count:", blogPluginData?.blogPosts?.length || 0);
+
     if (!blogPluginData?.blogPosts || blogPluginData.blogPosts.length === 0) {
+      console.error("No blog posts found from Docusaurus plugin");
       return [];
     }
 
@@ -96,7 +102,7 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
       };
     });
   } catch (error) {
-    console.warn("Error loading blog posts:", error);
+    console.error("Error loading blog posts:", error);
     return [];
   }
 }
