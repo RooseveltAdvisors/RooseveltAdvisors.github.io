@@ -6,6 +6,7 @@ import Layout from "@theme/Layout";
 import Translate, { translate } from "@docusaurus/Translate";
 import HomepageFeatures from "@site/src/components/HomepageFeatures";
 import ProjectHighlights from "@site/src/components/ProjectHighlights";
+import BlogPostsSection from "@site/src/components/BlogPostsSection";
 import AboutSection from "@site/src/components/AboutSection";
 import Heading from "@theme/Heading";
 import { motion } from "framer-motion";
@@ -77,6 +78,7 @@ export default function Home(): ReactNode {
       <main>
         <HomepageFeatures />
         <ProjectHighlights />
+        <BlogPostsSection />
         <AboutSection />
       </main>
     </Layout>

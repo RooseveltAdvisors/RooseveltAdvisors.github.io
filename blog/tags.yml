@@ -267,3 +267,38 @@ genai:
   label: GenAI
   permalink: /tags/genai
   description: Content related to Generative AI models and applications
+
+cloud:
+  label: Cloud
+  permalink: /tags/cloud
+  description: Cloud computing platforms and services
+
+data:
+  label: Data
+  permalink: /tags/data
+  description: Data management and analytics content
+
+no-code:
+  label: No-Code
+  permalink: /tags/no-code
+  description: No-code and low-code development platforms
+
+lovable:
+  label: Lovable
+  permalink: /tags/lovable
+  description: Content related to Lovable platform
+
+n8n:
+  label: n8n
+  permalink: /tags/n8n
+  description: n8n workflow automation platform
+
+perplexity:
+  label: Perplexity
+  permalink: /tags/perplexity
+  description: Perplexity AI and related content
+
+claude:
+  label: Claude
+  permalink: /tags/claude
+  description: Anthropic Claude AI assistant and applications
