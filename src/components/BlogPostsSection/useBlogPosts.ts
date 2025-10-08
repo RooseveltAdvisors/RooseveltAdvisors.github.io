@@ -1,5 +1,16 @@
 import useGlobalData from "@docusaurus/useGlobalData";
-import type { FeaturedBlogPost } from "@site/src/data/featuredBlogPosts";
+
+export type FeaturedBlogPost = {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  formattedDate: string;
+  permalink: string;
+  imageUrl?: string;
+  tags: string[];
+  readingTime?: number;
+};
 
 interface BlogPost {
   id?: string;
@@ -32,7 +43,7 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
     ] as BlogPluginData;
 
     if (!blogPluginData?.blogPosts || blogPluginData.blogPosts.length === 0) {
-      return getFallbackPosts();
+      return [];
     }
 
     // Sort by date and get the most recent posts
@@ -86,7 +97,7 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
     });
   } catch (error) {
     console.warn("Error loading blog posts:", error);
-    return getFallbackPosts();
+    return [];
   }
 }
 
@@ -101,45 +112,4 @@ function formatDate(dateString: string): string {
   } catch {
     return dateString;
   }
-}
-
-function getFallbackPosts(): FeaturedBlogPost[] {
-  return [
-    {
-      id: "building-aoa-agent-lovable-n8n",
-      title: "Building AoA Agent with Lovable and n8n",
-      description:
-        "Learn how to build an AoA (Agent of Agents) using Lovable for the UI and n8n for workflow automation",
-      date: "2025-05-31",
-      formattedDate: "May 31, 2025",
-      permalink: "/blog/building-aoa-agent-lovable-n8n",
-      imageUrl:
-        "/img/blog/2025-05-31-building-aoa-agent-lovable-n8n/hero-banner.png",
-      tags: ["no-code", "lovable", "n8n"],
-      readingTime: 5,
-    },
-    {
-      id: "fastapi-mcp-client",
-      title: "FastAPI MCP Client",
-      description: "Building a FastAPI client for Model Context Protocol (MCP)",
-      date: "2025-04-14",
-      formattedDate: "April 14, 2025",
-      permalink: "/blog/fastapi-mcp-client",
-      imageUrl: "/img/blog/2025-04-14-fastapi-mcp-client/hero-banner.png",
-      tags: ["fastapi", "mcp", "python"],
-      readingTime: 8,
-    },
-    {
-      id: "modular-ai-agents",
-      title: "Modular AI Agents",
-      description:
-        "Design patterns and best practices for building modular AI agent systems",
-      date: "2025-04-05",
-      formattedDate: "April 5, 2025",
-      permalink: "/blog/architecting-modular-ai-agents",
-      imageUrl: "/img/blog/2025-04-05-modular-ai-agents/hero-banner.png",
-      tags: ["ai", "agents", "architecture"],
-      readingTime: 10,
-    },
-  ];
 }

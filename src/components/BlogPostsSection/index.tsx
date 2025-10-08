@@ -2,7 +2,7 @@ import React, { type ReactNode } from "react";
 import Link from "@docusaurus/Link";
 import Heading from "@theme/Heading";
 import { motion } from "framer-motion";
-import type { FeaturedBlogPost } from "@site/src/data/featuredBlogPosts";
+import type { FeaturedBlogPost } from "./useBlogPosts";
 import { useRecentBlogPosts } from "./useBlogPosts";
 import styles from "./styles.module.css";
 
