@@ -49,20 +49,27 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
       const metadata = post.metadata || {};
       const frontMatter = metadata.frontMatter || {};
 
-      // For blog posts, construct the static image path based on date and slug
+      // For blog posts, use frontmatter image if available, otherwise construct path
       let imageUrl = "";
 
-      // Get the date from metadata
-      const postDate = metadata.date || "";
-      const dateMatch = postDate.match(/^(\d{4}-\d{2}-\d{2})/);
+      // First, check if image is specified in frontmatter
+      if (frontMatter.image) {
+        imageUrl = frontMatter.image;
+      } else if (metadata.image) {
+        imageUrl = metadata.image;
+      } else {
+        // Fallback: construct image path based on date and slug
+        const postDate = metadata.date || "";
+        const dateMatch = postDate.match(/^(\d{4}-\d{2}-\d{2})/);
 
-      if (dateMatch) {
-        // Get the slug from permalink
-        const permalink = metadata.permalink || "";
-        const slug = permalink.split("/").filter(Boolean).pop() || "";
+        if (dateMatch) {
+          // Get the slug from permalink
+          const permalink = metadata.permalink || "";
+          const slug = permalink.split("/").filter(Boolean).pop() || "";
 
-        // All blog images are now in static/img/blog/[date]-[slug]/hero-banner.png
-        imageUrl = `/img/blog/${dateMatch[1]}-${slug}/hero-banner.png`;
+          // Default pattern: static/img/blog/[date]-[slug]/hero-banner.png
+          imageUrl = `/img/blog/${dateMatch[1]}-${slug}/hero-banner.png`;
+        }
       }
 
       return {
