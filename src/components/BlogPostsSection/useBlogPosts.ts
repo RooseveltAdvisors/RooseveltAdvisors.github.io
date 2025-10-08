@@ -27,7 +27,7 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
   try {
     // Get blog posts from our custom plugin that injects them into global data
     const pluginData = usePluginData(
-      "recent-blog-posts-plugin"
+      "recent-blog-posts-plugin",
     ) as RecentPostsPluginData;
 
     if (!pluginData?.recentPosts || pluginData.recentPosts.length === 0) {
