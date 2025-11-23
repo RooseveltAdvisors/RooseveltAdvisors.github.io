@@ -1,0 +1,81 @@
+---
+slug: patient-insurance-education-app
+title: "Building Tools to Fix Real Problems: A Patient Insurance Education App"
+authors: [jon]
+tags: [healthcare, operations, tools, patient-experience, lovable]
+image: /img/blog/2025-11-22-patient-insurance-education-app/hero-banner.png
+---
+
+I got a 4-star Google review last week that bothered me more than it should have.
+
+A long-time patient wrote that he'd never paid a "copay" before at our urgent care clinics, but this time we charged him $37.50 out of nowhere. He was confused and felt blindsided.
+
+{/* truncate */}
+
+I called our office manager. She pulled up his account and explained: his insurance has 25% coinsurance (not a copay). The visit cost $150, insurance paid $112.50, he owed $37.50. His previous visits had zero patient responsibility for different reasons—claims were denied then reprocessed, or his deductible was already met.
+
+The patient wasn't wrong to be confused. Honestly? **I didn't fully understand the difference between copay and coinsurance until I had to learn it running these clinics.** And if I'm confused, patients definitely are.
+
+## The Real Problem
+
+My office manager told me something that stuck: "Patients don't understand the difference between copay and coinsurance. I try my best to explain it, but most don't get it."
+
+This isn't just about one review. It's an operational issue:
+- Staff time spent explaining benefits repeatedly
+- Patients surprised by bills they weren't expecting
+- Negative reviews that hurt our reputation
+- Payment collection issues when patients don't understand why they owe money
+
+I needed a way to **show** patients their benefits, not just tell them. Because explaining it with words clearly wasn't working—not for patients, and not for me when I first started.
+
+## The Solution
+
+I built a simple visual tool: **[eob.arcs.health](https://eob.arcs.health/)**
+
+It's designed for front desk staff to use at check-in. They walk the patient through 4 quick steps while the patient watches a visual breakdown update in real-time:
+
+1. **Visit cost** - "Your urgent care visit costs $150"
+2. **Deductible check** - "Do you have a deductible? How much is remaining?"
+3. **Insurance coverage** - "Your insurance pays 75%, you pay 25%"
+4. **Final breakdown** - Big, clear visual showing exactly what they'll pay today
+
+The key is the **animated visual bar** that shows the money flow:
+
+```
+├──────────────────────────────┤
+│███████████████░░░░░│
+│ Insurance $112.50 | You $37.50 │
+└──────────────────────────────┘
+```
+
+Patients can literally see their $150 visit split between what insurance covers and what they owe. No insurance jargon, just dollars and percentages they can understand.
+
+This is the tool I wish someone had shown me when I was trying to understand my own insurance.
+
+## Why This Matters
+
+Sometimes you need to build tools that don't exist yet.
+
+The commercial solutions for patient cost estimation are either:
+- Too expensive for small operators
+- Too complex (requiring full EHR integration)
+- Focused on pre-visit estimates, not point-of-service education
+
+I needed something simple that front desk staff could pull up on an iPad in 30 seconds and walk a patient through before they leave. So I built it using Lovable in about two hours.
+
+## What's Next
+
+I sent the tool to my front desk team this morning and asked for honest feedback:
+- Does it actually help or just add time?
+- What's confusing?
+- What's missing?
+
+If it works, great—we've solved a real problem. If it doesn't, I'll fix it or scrap it. The goal isn't to build perfect software; it's to solve the operational problem of patients not understanding their bills.
+
+I also responded to that Google review with a link to the tool and an acknowledgment that we should have done better. Hopefully, he and other patients will find it useful.
+
+---
+
+**For other urgent care operators:** If you're dealing with the same patient confusion about benefits, feel free to use this tool. It's free and open. If you have ideas to make it better, let me know—I'm still iterating on it.
+
+**Link:** [eob.arcs.health](https://eob.arcs.health/)
