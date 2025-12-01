@@ -106,7 +106,7 @@ const config: Config = {
         { to: "/showcase", label: "Projects", position: "left" },
         { to: "/blog", label: "Blog", position: "left" },
         {
-          href: "https://www.linkedin.com/in/jon-roosevelt/",
+          href: "https://www.linkedin.com/in/jonroosevelt/",
           position: "right",
           className: "header-linkedin-link",
           "aria-label": "Linkedin profile",
@@ -127,7 +127,7 @@ const config: Config = {
           items: [
             {
               label: "LinkedIn",
-              href: "https://www.linkedin.com/in/roosevelt-advisors/",
+              href: "https://www.linkedin.com/in/jonroosevelt/",
             },
           ],
         },
