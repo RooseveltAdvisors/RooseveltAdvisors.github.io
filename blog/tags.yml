@@ -302,3 +302,53 @@ claude:
   label: Claude
   permalink: /tags/claude
   description: Anthropic Claude AI assistant and applications
+
+operations:
+  label: Operations
+  permalink: /tags/operations
+  description: Operational strategy, workflow optimization, and business operations
+
+urgent-care:
+  label: Urgent Care
+  permalink: /tags/urgent-care
+  description: Urgent care clinic management and healthcare delivery
+
+philosophy:
+  label: Philosophy
+  permalink: /tags/philosophy
+  description: Philosophy, strategic thinking, and classical wisdom applied to modern life
+
+leadership:
+  label: Leadership
+  permalink: /tags/leadership
+  description: Leadership principles, management strategies, and team dynamics
+
+scheduling:
+  label: Scheduling
+  permalink: /tags/scheduling
+  description: Appointment scheduling systems and patient flow optimization
+
+patient-experience:
+  label: Patient Experience
+  permalink: /tags/patient-experience
+  description: Improving patient satisfaction and healthcare service delivery
+
+developer-tools:
+  label: Developer Tools
+  permalink: /tags/developer-tools
+  description: Tools, terminals, and development environment optimization
+
+workflow-automation:
+  label: Workflow Automation
+  permalink: /tags/workflow-automation
+  description: Automating business and clinical workflows
+
+observability:
+  label: Observability
+  permalink: /tags/observability
+  description: Monitoring, tracing, and observability in AI and software systems
+
+chatbot:
+  label: Chatbot
+  permalink: /tags/chatbot
+  description: Conversational AI and chatbot implementations

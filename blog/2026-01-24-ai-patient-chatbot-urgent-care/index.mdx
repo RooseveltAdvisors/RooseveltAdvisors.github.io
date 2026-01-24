@@ -1,0 +1,121 @@
+---
+slug: ai-patient-chatbot-urgent-care
+title: "Building an AI Patient Chatbot for Urgent Care with n8n, GPT-4, and Langfuse"
+authors: [jon]
+tags: [ai, healthcare, n8n, workflow-automation, observability, chatbot, patient-experience]
+image: /img/blog/2026-01-24-ai-patient-chatbot-urgent-care/hero-banner.png
+---
+
+When patients call or message an urgent care clinic, they're usually asking the same questions: "What are your hours?" "Do you take my insurance?" "How long is the wait right now?" These repetitive inquiries consume staff time that could be spent on clinical care. We built an AI-powered patient chatbot to handle these interactions automatically — and instrumented it with full observability so we can monitor quality in production.
+
+![AI Patient Chatbot Architecture](/img/blog/2026-01-24-ai-patient-chatbot-urgent-care/hero-banner.png)
+
+{/* truncate */}
+
+## The Problem
+
+Our urgent care clinics were fielding dozens of routine inquiries daily — phone calls, website messages, and walk-up questions that all had predictable answers. Front desk staff were context-switching between patient check-in, phone calls, and live chat, degrading the experience for everyone.
+
+We needed a system that could:
+- Answer common patient questions accurately and instantly
+- Escalate complex queries to human staff
+- Integrate with our real-time queue management system
+- Provide full traceability for quality monitoring
+
+## Architecture Overview
+
+The system is built on three core technologies:
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| Workflow Engine | n8n (self-hosted) | Orchestrates the conversation flow |
+| AI Model | OpenAI GPT-4 | Generates contextual responses |
+| Observability | Langfuse | Traces every interaction for quality review |
+| Queue Data | Clockwise.MD API | Real-time wait times and patient status |
+| Escalation | Microsoft Teams | Staff alerts for complex queries |
+
+### Why n8n?
+
+We chose n8n as our orchestration layer for several reasons:
+
+1. **Visual workflow design** — non-technical staff can understand and modify flows
+2. **Self-hosted** — patient data never leaves our infrastructure
+3. **Extensible** — easy to add new tools, APIs, and decision branches
+4. **Version controlled** — workflows are exportable and auditable
+
+### The Conversation Flow
+
+The chatbot workflow handles patient messages through a structured pipeline:
+
+1. **Message intake** — Patient sends a question via web chat
+2. **Context enrichment** — System pulls current clinic hours, wait times, and service availability from Clockwise.MD
+3. **AI response generation** — GPT-4 generates a response using clinic-specific context and conversation history
+4. **Langfuse trace logging** — Every interaction is traced with input, output, latency, and token usage
+5. **Escalation check** — If confidence is low or the query is complex, route to human staff via Teams
+6. **Response delivery** — Patient receives the answer in under 5 seconds
+
+## Langfuse: The Observability Layer
+
+In healthcare, you can't deploy an AI system and hope for the best. Every response needs to be auditable, and you need to catch quality issues before patients do.
+
+Langfuse gives us:
+
+- **Full conversation traces** — See exactly what context was provided and what the model generated
+- **Latency monitoring** — Track response times to ensure the &lt;5 second SLA
+- **Token usage tracking** — Monitor costs per interaction
+- **Quality scoring** — Flag responses that may need human review
+- **Session replay** — Review full patient conversations for training and improvement
+
+### What We Monitor
+
+From our Langfuse dashboard, we track:
+
+- **Response accuracy** — Are answers factually correct about hours, services, insurance?
+- **Escalation rate** — What percentage of queries require human intervention? (target: &lt;10%)
+- **Patient satisfaction signals** — Follow-up questions that indicate confusion or frustration
+- **Edge cases** — Novel questions that the system hasn't seen before
+
+## Real-World Results
+
+After deploying the chatbot across our clinic network:
+
+| Metric | Result |
+|--------|--------|
+| Response time | &lt;5 seconds (achieved) |
+| Accuracy target | >95% (monitoring) |
+| Staff escalation rate | &lt;10% (measuring) |
+| Common queries handled | Hours, insurance, wait times, services, locations |
+
+The biggest win isn't the metrics — it's that front desk staff can focus on the patients standing in front of them instead of answering the phone to say "Yes, we're open until 8 PM."
+
+## Handling Edge Cases
+
+The system is designed to fail gracefully:
+
+- **Unknown questions** → Acknowledge the limitation, offer to connect with staff
+- **Medical advice requests** → Firm redirect: "I can't provide medical advice, but our providers can help when you visit"
+- **Emotional/urgent situations** → Immediate escalation to human staff
+- **Multi-language queries** → Spanish support in development
+
+## Lessons Learned
+
+**1. Context quality matters more than model quality.** GPT-4 gives mediocre answers with mediocre context. Feed it accurate, current clinic data and it's excellent.
+
+**2. Observability is not optional in healthcare AI.** Langfuse paid for itself the first week when we caught a response that listed outdated holiday hours.
+
+**3. Staff trust requires transparency.** Showing clinical staff the Langfuse traces — letting them see exactly what the bot says — built confidence faster than any demo.
+
+**4. Start narrow, expand carefully.** We launched with just hours/location/insurance queries. Each new domain (wait times, services, booking) was added only after validating the previous one.
+
+## What's Next
+
+- **Appointment booking integration** — Let the chatbot actually schedule visits, not just answer questions about them
+- **Insurance verification** — Pre-check coverage before the patient arrives
+- **Multi-location support** — Scale across our clinic network with location-specific context
+- **Post-visit surveys** — Automated follow-up to capture patient feedback
+
+## The Takeaway
+
+Building an AI chatbot for healthcare isn't fundamentally different from building one for any industry — the technology stack is the same. What's different is the **bar for reliability and auditability**. In healthcare, a wrong answer about clinic hours is an inconvenience. A wrong answer about services or insurance could send a patient to the wrong place at the wrong time.
+
+The combination of n8n for orchestration, GPT-4 for intelligence, and Langfuse for observability gives us the confidence to deploy AI in a clinical setting while maintaining the transparency that healthcare demands.
