@@ -6,14 +6,14 @@ import styles from "./styles.module.css";
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<"svg">>;
+  image: string;
   description: ReactNode;
 };
 
 const FeatureList: FeatureItem[] = [
   {
     title: "AI & Big Data Solutions",
-    Svg: require("@site/static/img/data_analytics.svg").default,
+    image: require("@site/static/img/data_analytics.png").default,
     description: (
       <>
         15+ years building scalable data platforms and AI solutions across
@@ -24,7 +24,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: "Healthcare IT Solutions",
-    Svg: require("@site/static/img/healthcare_it.svg").default,
+    image: require("@site/static/img/healthcare_it.png").default,
     description: (
       <>
         Developed HIPAA-compliant IT systems that reduced clinical documentation
@@ -35,7 +35,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: "Performance Optimization",
-    Svg: require("@site/static/img/cloud_computing.svg").default,
+    image: require("@site/static/img/cloud_computing.png").default,
     description: (
       <>
         Consistently delivered 50-85% performance improvements through cloud
@@ -48,7 +48,7 @@ const FeatureList: FeatureItem[] = [
 
 function Feature({
   title,
-  Svg,
+  image,
   description,
   delay = 0,
 }: FeatureItem & { delay?: number }) {
@@ -63,7 +63,12 @@ function Feature({
         }}
       >
         <div className="text--center">
-          <Svg className={styles.featureSvg} role="img" />
+          <img
+            src={image}
+            alt={title}
+            className={styles.featureSvg}
+            role="img"
+          />
         </div>
         <div className="text--center padding-horiz--md">
           <Heading as="h3">{title}</Heading>
