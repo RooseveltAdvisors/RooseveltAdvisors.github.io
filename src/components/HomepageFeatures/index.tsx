@@ -13,7 +13,7 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: "AI & Big Data Solutions",
-    image: require("@site/static/img/data_analytics.jpg").default,
+    image: "/img/data_analytics.jpg",
     description: (
       <>
         15+ years building scalable data platforms and AI solutions across
@@ -24,7 +24,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: "Healthcare IT Solutions",
-    image: require("@site/static/img/healthcare_it.jpg").default,
+    image: "/img/healthcare_it.jpg",
     description: (
       <>
         Developed HIPAA-compliant IT systems that reduced clinical documentation
@@ -35,7 +35,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: "Performance Optimization",
-    image: require("@site/static/img/cloud_computing.jpg").default,
+    image: "/img/cloud_computing.jpg",
     description: (
       <>
         Consistently delivered 50-85% performance improvements through cloud
