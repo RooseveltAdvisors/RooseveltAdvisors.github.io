@@ -47,8 +47,8 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
       const postDate = new Date(post.date);
       const dateStr = postDate.toISOString().split("T")[0];
 
-      // Construct image path: /img/blog/[date]-[slug]/hero-banner.png
-      const imageUrl = `/img/blog/${dateStr}-${slug}/hero-banner.png`;
+      // Construct image path: /img/blog/[date]-[slug]/hero-banner.jpg
+      const imageUrl = `/img/blog/${dateStr}-${slug}/hero-banner.jpg`;
 
       return {
         id: slug,
