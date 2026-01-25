@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="blog-wrapper blog-post-page plugin-blog plugin-id-default" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.7.0">
+<title data-rh="true">The Universal Algorithm: How One Framework Scales from Bug Fixes to Building Companies | Jon Roosevelt</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://jonroosevelt.com/blog/universal-algorithm-ai-execution-framework"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="The Universal Algorithm: How One Framework Scales from Bug Fixes to Building Companies | Jon Roosevelt"><meta data-rh="true" name="description" content="What if one algorithm could handle everything—from fixing a typo to architecting a distributed system to building an entire company? Not a vague philosophy, but a precise, verifiable framework with measurable progress tracking."><meta data-rh="true" property="og:description" content="What if one algorithm could handle everything—from fixing a typo to architecting a distributed system to building an entire company? Not a vague philosophy, but a precise, verifiable framework with measurable progress tracking."><meta data-rh="true" property="og:image" content="https://jonroosevelt.com/img/blog/2026-01-24-universal-algorithm-ai-execution-framework/hero-banner.jpg"><meta data-rh="true" name="twitter:image" content="https://jonroosevelt.com/img/blog/2026-01-24-universal-algorithm-ai-execution-framework/hero-banner.jpg"><meta data-rh="true" property="og:type" content="article"><meta data-rh="true" property="article:published_time" content="2026-01-24T00:00:00.000Z"><meta data-rh="true" property="article:author" content="https://jonroosevelt.com"><meta data-rh="true" property="article:tag" content="AI,Architecture,Algorithms,Productivity,Systems Thinking,Automation"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://jonroosevelt.com/blog/universal-algorithm-ai-execution-framework"><link data-rh="true" rel="alternate" href="https://jonroosevelt.com/blog/universal-algorithm-ai-execution-framework" hreflang="en"><link data-rh="true" rel="alternate" href="https://jonroosevelt.com/blog/universal-algorithm-ai-execution-framework" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://jonroosevelt.com/blog/universal-algorithm-ai-execution-framework","mainEntityOfPage":"https://jonroosevelt.com/blog/universal-algorithm-ai-execution-framework","url":"https://jonroosevelt.com/blog/universal-algorithm-ai-execution-framework","headline":"The Universal Algorithm: How One Framework Scales from Bug Fixes to Building Companies","name":"The Universal Algorithm: How One Framework Scales from Bug Fixes to Building Companies","description":"What if one algorithm could handle everything—from fixing a typo to architecting a distributed system to building an entire company? Not a vague philosophy, but a precise, verifiable framework with measurable progress tracking.","datePublished":"2026-01-24T00:00:00.000Z","author":{"@type":"Person","name":"Jon Roosevelt","description":"Consultant","url":"https://jonroosevelt.com","image":"https://github.com/RooseveltAdvisors.png"},"image":{"@type":"ImageObject","@id":"https://jonroosevelt.com/img/blog/2026-01-24-universal-algorithm-ai-execution-framework/hero-banner.jpg","url":"https://jonroosevelt.com/img/blog/2026-01-24-universal-algorithm-ai-execution-framework/hero-banner.jpg","contentUrl":"https://jonroosevelt.com/img/blog/2026-01-24-universal-algorithm-ai-execution-framework/hero-banner.jpg","caption":"title image for the blog post: The Universal Algorithm: How One Framework Scales from Bug Fixes to Building Companies"},"keywords":[],"isPartOf":{"@type":"Blog","@id":"https://jonroosevelt.com/blog","name":"Blog"}}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Jon Roosevelt RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Jon Roosevelt Atom Feed">
+
+<link rel="preconnect" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TECW05ZKH4"></script>
+<script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-TECW05ZKH4",{anonymize_ip:!0})</script>
+
+
+
+
+
+
+<script src="https://cloud.umami.is/script.js" data-website-id="c31542ec-5010-4c26-9acb-391b1c521728" data-domains="jonroosevelt.com,rooseveltadvisors.github.io" defer="defer"></script><link rel="stylesheet" href="/assets/css/styles.e4cadd58.css">
+<script src="/assets/js/runtime~main.a3698d86.js" defer="defer"></script>
+<script src="/assets/js/main.e836558c.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();t(null!==e?e:"dark")}(),function(){try{const n=new URLSearchParams(window.location.search).entries();for(var[t,e]of n)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/img/logo.svg"><link rel="preload" as="image" href="https://github.com/RooseveltAdvisors.png"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/logo.svg" alt="Site Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/img/logo.svg" alt="Site Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">Jon Roosevelt</b></a><a href="https://cloud.umami.is/share/nl5j9KUNu01VtqfG/jonroosevelt.com" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Analytics</a><a class="navbar__item navbar__link" href="/showcase">Projects</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/blog">Blog</a></div><div class="navbar__items navbar__items--right"><a href="https://www.linkedin.com/in/jonroosevelt/" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link header-linkedin-link" aria-label="Linkedin profile"></a><a href="https://github.com/RooseveltAdvisors" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link header-github-link" aria-label="GitHub repository"></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently dark mode)" aria-label="Switch between dark and light mode (currently dark mode)" aria-live="polite" aria-pressed="true"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0"><div class="container margin-vert--lg"><div class="row"><aside class="col col--3"><nav class="sidebar_re4s thin-scrollbar" aria-label="Blog recent posts navigation"><div class="sidebarItemTitle_pO2u margin-bottom--md">Recent posts</div><div role="group"><h3 class="yearGroupHeading_rMGB">2026</h3><ul class="sidebarItemList_Yudw clean-list"><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/blog/2026/01/25/ai-second-brain">How AI Transformed My Second Brain from Passive to Active</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/blog/burden-of-being">The Burden of Being: Why Responsibility Might Be the Antidote to Modern Nihilism</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/blog/ai-urgent-care-trends">Two AI Trends Transforming Urgent Care in 2026</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/blog/four-line-architecture-beat-complex-ai-frameworks">The 4-Line Architecture That Beat Complex AI Frameworks</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/blog/ai-patient-chatbot-urgent-care">Building an AI Patient Chatbot for Urgent Care with n8n, GPT-4, and Langfuse</a></li></ul></div></nav></aside><main class="col col--7"><article class=""><header><h1 class="title_f1Hy">The Universal Algorithm: How One Framework Scales from Bug Fixes to Building Companies</h1><div class="container_mt6G margin-vert--md"><time datetime="2026-01-24T00:00:00.000Z">January 24, 2026</time> · <!-- -->21 min read</div><div class="margin-top--md margin-bottom--sm row"><div class="col col--12 authorCol_Hf19"><div class="avatar margin-bottom--sm"><a class="avatar__photo-link" href="/blog/authors/all-jon-roosevelt-articles"><img class="avatar__photo authorImage_XqGP" src="https://github.com/RooseveltAdvisors.png" alt="Jon Roosevelt"></a><div class="avatar__intro authorDetails_lV9A"><div class="avatar__name"><a href="/blog/authors/all-jon-roosevelt-articles"><span class="authorName_yefp">Jon Roosevelt</span></a></div><small class="authorTitle_nd0D" title="Consultant">Consultant</small><div class="authorSocials_rSDt"><a href="https://www.linkedin.com/in/jonroosevelt/" target="_blank" rel="noopener noreferrer" class="authorSocialLink_owbf" title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid" viewBox="0 0 256 256" class="authorSocialLink_owbf"><path d="M218.123 218.127h-37.931v-59.403c0-14.165-.253-32.4-19.728-32.4-19.756 0-22.779 15.434-22.779 31.369v60.43h-37.93V95.967h36.413v16.694h.51a39.907 39.907 0 0 1 35.928-19.733c38.445 0 45.533 25.288 45.533 58.186l-.016 67.013ZM56.955 79.27c-12.157.002-22.014-9.852-22.016-22.009-.002-12.157 9.851-22.014 22.008-22.016 12.157-.003 22.014 9.851 22.016 22.008A22.013 22.013 0 0 1 56.955 79.27m18.966 138.858H37.95V95.967h37.97v122.16ZM237.033.018H18.89C8.58-.098.125 8.161-.001 18.471v219.053c.122 10.315 8.576 18.582 18.89 18.474h218.144c10.336.128 18.823-8.139 18.966-18.474V18.454c-.147-10.33-8.635-18.588-18.966-18.453" fill="#0A66C2"></path></svg></a><a href="https://github.com/RooseveltAdvisors" target="_blank" rel="noopener noreferrer" class="authorSocialLink_owbf" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 250" preserveAspectRatio="xMidYMid" style="--dark:#000;--light:#fff" class="authorSocialLink_owbf githubSvg_Uu4N"><path d="M128.001 0C57.317 0 0 57.307 0 128.001c0 56.554 36.676 104.535 87.535 121.46 6.397 1.185 8.746-2.777 8.746-6.158 0-3.052-.12-13.135-.174-23.83-35.61 7.742-43.124-15.103-43.124-15.103-5.823-14.795-14.213-18.73-14.213-18.73-11.613-7.944.876-7.78.876-7.78 12.853.902 19.621 13.19 19.621 13.19 11.417 19.568 29.945 13.911 37.249 10.64 1.149-8.272 4.466-13.92 8.127-17.116-28.431-3.236-58.318-14.212-58.318-63.258 0-13.975 5-25.394 13.188-34.358-1.329-3.224-5.71-16.242 1.24-33.874 0 0 10.749-3.44 35.21 13.121 10.21-2.836 21.16-4.258 32.038-4.307 10.878.049 21.837 1.47 32.066 4.307 24.431-16.56 35.165-13.12 35.165-13.12 6.967 17.63 2.584 30.65 1.255 33.873 8.207 8.964 13.173 20.383 13.173 34.358 0 49.163-29.944 59.988-58.447 63.157 4.591 3.972 8.682 11.762 8.682 23.704 0 17.126-.148 30.91-.148 35.126 0 3.407 2.304 7.398 8.792 6.14C219.37 232.5 256 184.537 256 128.002 256 57.307 198.691 0 128.001 0Zm-80.06 182.34c-.282.636-1.283.827-2.194.39-.929-.417-1.45-1.284-1.15-1.922.276-.655 1.279-.838 2.205-.399.93.418 1.46 1.293 1.139 1.931Zm6.296 5.618c-.61.566-1.804.303-2.614-.591-.837-.892-.994-2.086-.375-2.66.63-.566 1.787-.301 2.626.591.838.903 1 2.088.363 2.66Zm4.32 7.188c-.785.545-2.067.034-2.86-1.104-.784-1.138-.784-2.503.017-3.05.795-.547 2.058-.055 2.861 1.075.782 1.157.782 2.522-.019 3.08Zm7.304 8.325c-.701.774-2.196.566-3.29-.49-1.119-1.032-1.43-2.496-.726-3.27.71-.776 2.213-.558 3.315.49 1.11 1.03 1.45 2.505.701 3.27Zm9.442 2.81c-.31 1.003-1.75 1.459-3.199 1.033-1.448-.439-2.395-1.613-2.103-2.626.301-1.01 1.747-1.484 3.207-1.028 1.446.436 2.396 1.602 2.095 2.622Zm10.744 1.193c.036 1.055-1.193 1.93-2.715 1.95-1.53.034-2.769-.82-2.786-1.86 0-1.065 1.202-1.932 2.733-1.958 1.522-.03 2.768.818 2.768 1.868Zm10.555-.405c.182 1.03-.875 2.088-2.387 2.37-1.485.271-2.861-.365-3.05-1.386-.184-1.056.893-2.114 2.376-2.387 1.514-.263 2.868.356 3.061 1.403Z"></path></svg></a></div></div></div></div></div></header><div id="__blog-post-container" class="markdown"><p>What if one algorithm could handle everything—from fixing a typo to architecting a distributed system to building an entire company? Not a vague philosophy, but a precise, verifiable framework with measurable progress tracking.</p>
+<p>I spent six months building Personal AI Infrastructure (PAI) v2.1, an agent execution system that uses the same algorithm whether you&#x27;re debugging a function or designing multi-year product strategies. The breakthrough wasn&#x27;t in finding a universal algorithm—it was in discovering that the algorithm was already universal. We just needed to see it clearly.</p>
+<p><img decoding="async" loading="lazy" alt="Universal Algorithm Framework" src="/assets/images/hero-banner-d43a6bb11bc77a66c13b489c626abc48.jpg" width="2752" height="1536" class="img_ev3q"></p>
+<!-- -->
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="the-problem-with-task-specific-thinking">The Problem with Task-Specific Thinking<a href="#the-problem-with-task-specific-thinking" class="hash-link" aria-label="Direct link to The Problem with Task-Specific Thinking" title="Direct link to The Problem with Task-Specific Thinking">​</a></h2>
+<p>Most developer tools operate on the assumption that different problems require different approaches. You have one workflow for fixing bugs, another for writing features, a third for architectural planning. Each context switch requires mental overhead—different commands, different tools, different mental models.</p>
+<p>I noticed this pattern while watching myself work. When debugging, I&#x27;d follow an implicit process: observe the error, understand the code, plan a fix, implement it, verify it works. When architecting a new system, the same pattern emerged at a different scale: observe requirements, think through constraints, plan the architecture, build components, verify integration, learn from results.</p>
+<p>The structure was identical. Only the scope changed.</p>
+<p>This realization led to a question: what if we could formalize this pattern into a single algorithm that works at every scale?</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="the-universal-algorithm-current--ideal-via-verifiable-iteration">The Universal Algorithm: Current → Ideal via Verifiable Iteration<a href="#the-universal-algorithm-current--ideal-via-verifiable-iteration" class="hash-link" aria-label="Direct link to The Universal Algorithm: Current → Ideal via Verifiable Iteration" title="Direct link to The Universal Algorithm: Current → Ideal via Verifiable Iteration">​</a></h2>
+<p>The core insight is deceptively simple:</p>
+<p><strong>Every task is a gap between current state and ideal state, closed through verifiable iteration.</strong></p>
+<p>This translates into seven phases that repeat until completion:</p>
+<!-- -->
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="phase-1-observe---establish-current-state">Phase 1: OBSERVE - Establish Current State<a href="#phase-1-observe---establish-current-state" class="hash-link" aria-label="Direct link to Phase 1: OBSERVE - Establish Current State" title="Direct link to Phase 1: OBSERVE - Establish Current State">​</a></h3>
+<p>Every iteration begins with ruthless clarity about where you are. Not where you think you are, or where you should be—where you actually are.</p>
+<p>For a bug fix, this means reading error messages, examining stack traces, understanding the failing behavior. For system architecture, this means auditing existing services, measuring current performance, documenting constraints.</p>
+<p>The OBSERVE phase produces artifacts:</p>
+<ul>
+<li>Current state measurements (performance metrics, test results, user feedback)</li>
+<li>Constraints (technical debt, dependencies, compliance requirements)</li>
+<li>Available resources (time, budget, team capacity)</li>
+</ul>
+<p><strong>Critical principle:</strong> Observations must be verifiable. &quot;The system is slow&quot; is not an observation. &quot;API p95 latency is 2.3 seconds, target is 500ms&quot; is an observation.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="phase-2-think---analyze-the-gap">Phase 2: THINK - Analyze the Gap<a href="#phase-2-think---analyze-the-gap" class="hash-link" aria-label="Direct link to Phase 2: THINK - Analyze the Gap" title="Direct link to Phase 2: THINK - Analyze the Gap">​</a></h3>
+<p>With current state established, THINK identifies what&#x27;s missing and why. This is pattern recognition, root cause analysis, and strategic thinking combined.</p>
+<p>For a bug, THINK traces causality: what code path produces the error? What conditions trigger it? What invariants are violated?</p>
+<p>For architecture, THINK examines trade-offs: what capabilities are missing? What bottlenecks exist? What technical decisions created the current constraints?</p>
+<p>The THINK phase produces:</p>
+<ul>
+<li>Root cause analysis</li>
+<li>Constraint identification</li>
+<li>Alternative approaches</li>
+<li>Risk assessment</li>
+</ul>
+<p><strong>Key insight:</strong> THINK doesn&#x27;t make decisions—it surfaces options. Decision-making happens in PLAN.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="phase-3-plan---define-verifiable-steps">Phase 3: PLAN - Define Verifiable Steps<a href="#phase-3-plan---define-verifiable-steps" class="hash-link" aria-label="Direct link to Phase 3: PLAN - Define Verifiable Steps" title="Direct link to Phase 3: PLAN - Define Verifiable Steps">​</a></h3>
+<p>PLAN converts analysis into actionable steps with explicit success criteria. Every plan must answer three questions:</p>
+<ol>
+<li><strong>What are we building?</strong> (Specific deliverables)</li>
+<li><strong>How do we know it works?</strong> (Verification criteria)</li>
+<li><strong>How much effort does this require?</strong> (Resource allocation)</li>
+</ol>
+<p>Plans are hierarchical. A company-building plan contains multiple system-architecture plans, which contain multiple feature-development plans, which contain multiple bug-fix plans.</p>
+<p>The PLAN phase produces:</p>
+<ul>
+<li>Ordered task list with dependencies</li>
+<li>Ideal State Criteria (ISC) for verification</li>
+<li>Effort classification (TRIVIAL → DETERMINED)</li>
+<li>Model selection for execution</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="phase-4-build---create-artifacts">Phase 4: BUILD - Create Artifacts<a href="#phase-4-build---create-artifacts" class="hash-link" aria-label="Direct link to Phase 4: BUILD - Create Artifacts" title="Direct link to Phase 4: BUILD - Create Artifacts">​</a></h3>
+<p>BUILD is where we create the things needed for execution. For code, this means writing functions, tests, documentation. For systems, this means designing APIs, data models, deployment configurations. For companies, this means drafting strategy documents, hiring plans, financial models.</p>
+<p>BUILD is distinct from EXECUTE. You build a migration script (BUILD) before you run it against production (EXECUTE). You build a pitch deck (BUILD) before you present it to investors (EXECUTE).</p>
+<p>The BUILD phase produces:</p>
+<ul>
+<li>Code, tests, configurations</li>
+<li>Documentation, diagrams, specifications</li>
+<li>Scripts, automation, tooling</li>
+<li>Communications, presentations, reports</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="phase-5-execute---take-action">Phase 5: EXECUTE - Take Action<a href="#phase-5-execute---take-action" class="hash-link" aria-label="Direct link to Phase 5: EXECUTE - Take Action" title="Direct link to Phase 5: EXECUTE - Take Action">​</a></h3>
+<p>EXECUTE runs the artifacts from BUILD in the real world. This is where you actually ship code, migrate databases, deploy infrastructure, send emails, make decisions.</p>
+<p>EXECUTE is the only phase that changes external state. All other phases operate on information and plans.</p>
+<p>The EXECUTE phase produces:</p>
+<ul>
+<li>State changes (deployed code, sent messages, created resources)</li>
+<li>Execution logs and traces</li>
+<li>Immediate feedback from actions taken</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="phase-6-verify---measure-progress">Phase 6: VERIFY - Measure Progress<a href="#phase-6-verify---measure-progress" class="hash-link" aria-label="Direct link to Phase 6: VERIFY - Measure Progress" title="Direct link to Phase 6: VERIFY - Measure Progress">​</a></h3>
+<p>VERIFY compares outcomes against Ideal State Criteria defined in PLAN. This isn&#x27;t subjective—every ISC is a boolean condition that evaluates to true or false.</p>
+<p>For code:</p>
+<ul>
+<li>ISC 1: All unit tests pass</li>
+<li>ISC 2: Existing features still work</li>
+<li>ISC 3: API latency under 500ms at p95</li>
+</ul>
+<p>For architecture:</p>
+<ul>
+<li>ISC 1: System handles 10k concurrent users</li>
+<li>ISC 2: Uptime exceeds 99.9%</li>
+<li>ISC 3: All services emit metrics</li>
+</ul>
+<p>VERIFY produces a gap analysis: which criteria are met, which aren&#x27;t, what&#x27;s the delta.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="phase-7-learn---update-context">Phase 7: LEARN - Update Context<a href="#phase-7-learn---update-context" class="hash-link" aria-label="Direct link to Phase 7: LEARN - Update Context" title="Direct link to Phase 7: LEARN - Update Context">​</a></h3>
+<p>LEARN converts the iteration&#x27;s results into knowledge that informs future iterations. This is where you update your mental model, document discoveries, refine estimates, adjust plans.</p>
+<p>What worked? What didn&#x27;t? What surprised you? What assumptions were wrong?</p>
+<p>The LEARN phase produces:</p>
+<ul>
+<li>Updated context and assumptions</li>
+<li>Refined estimates for remaining work</li>
+<li>Documentation of decisions and rationale</li>
+<li>Trigger for next iteration (continue loop or exit)</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="isc-tracking-measuring-the-gap">ISC Tracking: Measuring the Gap<a href="#isc-tracking-measuring-the-gap" class="hash-link" aria-label="Direct link to ISC Tracking: Measuring the Gap" title="Direct link to ISC Tracking: Measuring the Gap">​</a></h2>
+<p>The Ideal State Criteria (ISC) system is what makes this framework verifiable. Every task defines upfront what &quot;done&quot; means as a set of boolean conditions.</p>
+<p>Here&#x27;s a real example from a database migration task:</p>
+<p><strong>Migration ISC Criteria:</strong></p>
+<ol>
+<li>New schema deployed to staging (verifiable via SQL query)</li>
+<li>All user records migrated (count matches source table)</li>
+<li>Data integrity checks pass (0 mismatches found)</li>
+<li>Rollback procedure verified (returns data to original state)</li>
+</ol>
+<p>After each iteration, we evaluate all criteria and update status. Progress is mechanical: count of completed criteria divided by total criteria.</p>
+<p>When progress reaches 100%, the task is complete. Not &quot;probably done&quot; or &quot;looks good enough&quot;—provably complete because all defined success criteria are met.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="the-ralph-loop-persistent-iteration-until-completion">The Ralph Loop: Persistent Iteration Until Completion<a href="#the-ralph-loop-persistent-iteration-until-completion" class="hash-link" aria-label="Direct link to The Ralph Loop: Persistent Iteration Until Completion" title="Direct link to The Ralph Loop: Persistent Iteration Until Completion">​</a></h2>
+<p>The Universal Algorithm becomes powerful when wrapped in what I call the Ralph Loop—named after the principle of relentless pursuit until verified completion.</p>
+<p>The loop executes one full cycle of the seven phases, then checks ISC status. If criteria remain unmet, it loops again. And again. Until either:</p>
+<ol>
+<li>All ISC criteria are satisfied (success)</li>
+<li>An unresolvable blocker is encountered (requires external intervention)</li>
+<li>Max iterations are reached (prevents infinite loops on time-boxed tasks)</li>
+</ol>
+<p>For DETERMINED tasks like building companies, max iterations is effectively infinite. The loop persists across days, weeks, months—however long it takes to satisfy all criteria.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="effort-classification-and-model-selection">Effort Classification and Model Selection<a href="#effort-classification-and-model-selection" class="hash-link" aria-label="Direct link to Effort Classification and Model Selection" title="Direct link to Effort Classification and Model Selection">​</a></h2>
+<p>Not all tasks require the same resources. PAI defines five effort levels that determine both iteration depth and model selection:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="trivial-1-2-iterations-haiku">TRIVIAL (1-2 iterations, Haiku)<a href="#trivial-1-2-iterations-haiku" class="hash-link" aria-label="Direct link to TRIVIAL (1-2 iterations, Haiku)" title="Direct link to TRIVIAL (1-2 iterations, Haiku)">​</a></h3>
+<ul>
+<li>Simple, well-defined tasks with obvious solutions</li>
+<li>Examples: typo fixes, config updates, adding a log statement</li>
+<li>Model: Claude Haiku (fast, cheap, sufficient for straightforward work)</li>
+<li>Max iterations: 3</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="quick-3-5-iterations-haikusonnet">QUICK (3-5 iterations, Haiku/Sonnet)<a href="#quick-3-5-iterations-haikusonnet" class="hash-link" aria-label="Direct link to QUICK (3-5 iterations, Haiku/Sonnet)" title="Direct link to QUICK (3-5 iterations, Haiku/Sonnet)">​</a></h3>
+<ul>
+<li>Straightforward tasks requiring some analysis</li>
+<li>Examples: implementing a simple function, writing a test, fixing a bug</li>
+<li>Model: Haiku for OBSERVE/THINK, Sonnet for complex BUILD</li>
+<li>Max iterations: 10</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="standard-5-15-iterations-sonnet">STANDARD (5-15 iterations, Sonnet)<a href="#standard-5-15-iterations-sonnet" class="hash-link" aria-label="Direct link to STANDARD (5-15 iterations, Sonnet)" title="Direct link to STANDARD (5-15 iterations, Sonnet)">​</a></h3>
+<ul>
+<li>Typical feature development with moderate complexity</li>
+<li>Examples: building a REST endpoint, refactoring a module, optimizing a query</li>
+<li>Model: Sonnet for all phases</li>
+<li>Max iterations: 25</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="thorough-15-50-iterations-sonnetopus">THOROUGH (15-50 iterations, Sonnet/Opus)<a href="#thorough-15-50-iterations-sonnetopus" class="hash-link" aria-label="Direct link to THOROUGH (15-50 iterations, Sonnet/Opus)" title="Direct link to THOROUGH (15-50 iterations, Sonnet/Opus)">​</a></h3>
+<ul>
+<li>Complex features requiring deep analysis and careful verification</li>
+<li>Examples: designing a new service, implementing security features, complex migrations</li>
+<li>Model: Sonnet primary, Opus for critical THINK/VERIFY phases</li>
+<li>Max iterations: 75</li>
+<li>State persistence: checkpoint after every 5 iterations</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="determined-50-iterations-opus">DETERMINED (50+ iterations, Opus)<a href="#determined-50-iterations-opus" class="hash-link" aria-label="Direct link to DETERMINED (50+ iterations, Opus)" title="Direct link to DETERMINED (50+ iterations, Opus)">​</a></h3>
+<ul>
+<li>Major initiatives with long time horizons</li>
+<li>Examples: architecture overhauls, new product launches, company strategy</li>
+<li>Model: Opus for all phases requiring strategic thinking</li>
+<li>Max iterations: Infinite</li>
+<li>State persistence: checkpoint after every iteration</li>
+<li>Multi-agent collaboration enabled</li>
+</ul>
+<p>The effort classification controls concrete system behavior—which AI model to use for each phase, how often to checkpoint state, when to enable multi-agent coordination.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="case-study-1-bug-fix-quick---4-iterations">Case Study 1: Bug Fix (QUICK - 4 iterations)<a href="#case-study-1-bug-fix-quick---4-iterations" class="hash-link" aria-label="Direct link to Case Study 1: Bug Fix (QUICK - 4 iterations)" title="Direct link to Case Study 1: Bug Fix (QUICK - 4 iterations)">​</a></h2>
+<p>Let&#x27;s trace a concrete example: fixing a bug where API requests occasionally timeout.</p>
+<p><strong>Iteration 1:</strong></p>
+<p><strong>OBSERVE:</strong> Review error logs, identify timeout pattern (occurs under load, p95 latency 8s, timeout set to 5s)</p>
+<p><strong>THINK:</strong> Root cause hypothesis: database query missing index, causing slow table scans under load</p>
+<p><strong>PLAN:</strong></p>
+<ul>
+<li>ISC 1: Identify slow queries in production logs</li>
+<li>ISC 2: Add appropriate indexes</li>
+<li>ISC 3: Verify p95 latency under 500ms</li>
+<li>ISC 4: No timeouts in 1 hour of production traffic</li>
+<li>Effort: QUICK (database optimization is straightforward)</li>
+</ul>
+<p><strong>BUILD:</strong> Write query to analyze slow query log, design index schema</p>
+<p><strong>EXECUTE:</strong> Run analysis against production logs</p>
+<p><strong>VERIFY:</strong> ISC 1 completed (found slow query on orders table), ISC 2-4 pending</p>
+<p><strong>LEARN:</strong> Query scans 2M rows for active users, created_at column not indexed</p>
+<p><strong>Iteration 2:</strong></p>
+<p><strong>OBSERVE:</strong> Confirmed missing index on orders.created_at</p>
+<p><strong>THINK:</strong> Adding index will speed lookups but increase write cost (acceptable trade-off)</p>
+<p><strong>PLAN:</strong> Add compound index on (user_id, created_at), test in staging first</p>
+<p><strong>BUILD:</strong> Migration script with rollback procedure</p>
+<p><strong>EXECUTE:</strong> Run migration in staging</p>
+<p><strong>VERIFY:</strong> ISC 2 completed (index created), ISC 3-4 still pending</p>
+<p><strong>LEARN:</strong> Staging tests show 95% latency reduction (8s → 400ms)</p>
+<p><strong>Iteration 3:</strong></p>
+<p><strong>OBSERVE:</strong> Staging performing well, no issues detected</p>
+<p><strong>THINK:</strong> Safe to deploy to production, monitoring critical</p>
+<p><strong>PLAN:</strong> Production migration during low-traffic window, 1-hour monitoring</p>
+<p><strong>BUILD:</strong> Deployment plan with rollback triggers</p>
+<p><strong>EXECUTE:</strong> Deploy index to production</p>
+<p><strong>VERIFY:</strong> ISC 3 completed (p95 latency 420ms), ISC 4 pending</p>
+<p><strong>LEARN:</strong> Immediate latency improvement observed</p>
+<p><strong>Iteration 4:</strong></p>
+<p><strong>OBSERVE:</strong> 1 hour elapsed, monitoring data collected</p>
+<p><strong>THINK:</strong> No timeouts observed, latency stable</p>
+<p><strong>PLAN:</strong> Final verification</p>
+<p><strong>BUILD:</strong> Generate monitoring report</p>
+<p><strong>EXECUTE:</strong> Run verification queries</p>
+<p><strong>VERIFY:</strong> ISC 4 completed (0 timeouts in 1 hour, 2,847 successful requests)</p>
+<p><strong>LEARN:</strong> Index resolved the issue, document for future reference</p>
+<p><strong>Result:</strong> Task complete in 4 iterations. All ISC criteria met. Time elapsed: approximately 2 hours.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="case-study-2-architecture-thorough---28-iterations">Case Study 2: Architecture (THOROUGH - 28 iterations)<a href="#case-study-2-architecture-thorough---28-iterations" class="hash-link" aria-label="Direct link to Case Study 2: Architecture (THOROUGH - 28 iterations)" title="Direct link to Case Study 2: Architecture (THOROUGH - 28 iterations)">​</a></h2>
+<p>Now let&#x27;s scale up: designing a new microservice for real-time event processing.</p>
+<p><strong>Iteration 1-5: OBSERVE &amp; THINK</strong></p>
+<p>Early iterations focus on understanding requirements:</p>
+<ul>
+<li>Event volume: 50k events/second peak</li>
+<li>Latency requirement: p99 under 100ms</li>
+<li>Availability: 99.99% uptime</li>
+<li>Data retention: 30 days</li>
+<li>Integration: existing Kafka cluster, PostgreSQL, Redis</li>
+</ul>
+<p>Analysis surfaces constraints:</p>
+<ul>
+<li>Existing services use REST, need to maintain compatibility</li>
+<li>Compliance requires all events logged</li>
+<li>Team familiar with Node.js, new tech creates learning overhead</li>
+</ul>
+<p><strong>Iteration 6-10: PLAN &amp; BUILD</strong></p>
+<p>Define architecture:</p>
+<ul>
+<li>Event consumer (Kafka → processing pipeline)</li>
+<li>Processing engine (event validation, enrichment, routing)</li>
+<li>State store (Redis for hot data, PostgreSQL for cold)</li>
+<li>REST API (compatibility with existing services)</li>
+<li>Monitoring (Prometheus, Grafana, distributed tracing)</li>
+</ul>
+<p>ISC defined:</p>
+<ol>
+<li>Handles 50k events/sec in load test</li>
+<li>p99 latency under 100ms</li>
+<li>99.99% uptime over 7-day test</li>
+<li>All events persisted to PostgreSQL</li>
+<li>Zero data loss during failover</li>
+<li>REST API backward compatible</li>
+<li>Full observability (metrics, logs, traces)</li>
+</ol>
+<p>BUILD artifacts:</p>
+<ul>
+<li>Architecture diagrams</li>
+<li>API specifications (OpenAPI)</li>
+<li>Data models</li>
+<li>Infrastructure as Code (Terraform)</li>
+<li>Deployment pipeline (CI/CD)</li>
+</ul>
+<p><strong>Iteration 11-20: EXECUTE &amp; VERIFY (incremental)</strong></p>
+<p>Implement components incrementally:</p>
+<ul>
+<li>Iteration 11-13: Kafka consumer with basic processing</li>
+<li>Iteration 14-16: State management (Redis + PostgreSQL)</li>
+<li>Iteration 17-18: REST API layer</li>
+<li>Iteration 19-20: Monitoring and alerting</li>
+</ul>
+<p>Each iteration verifies subset of ISC:</p>
+<ul>
+<li>After Iteration 13: ISC 4 verified (events persisted)</li>
+<li>After Iteration 16: ISC 2 partially verified (p99 at 120ms, needs optimization)</li>
+<li>After Iteration 18: ISC 6 verified (REST API compatible)</li>
+<li>After Iteration 20: ISC 7 verified (observability complete)</li>
+</ul>
+<p><strong>Iteration 21-25: Optimization</strong></p>
+<p>VERIFY reveals performance gaps:</p>
+<ul>
+<li>ISC 1: Only handles 35k events/sec (need 50k)</li>
+<li>ISC 2: p99 latency 120ms (need under 100ms)</li>
+</ul>
+<p>THINK identifies bottlenecks:</p>
+<ul>
+<li>Database writes blocking event loop</li>
+<li>Serialization overhead in Kafka consumer</li>
+</ul>
+<p>PLAN optimizations:</p>
+<ul>
+<li>Batch database writes</li>
+<li>Use binary serialization (Protocol Buffers)</li>
+<li>Add consumer parallelism</li>
+</ul>
+<p>EXECUTE changes, VERIFY improvements:</p>
+<ul>
+<li>After Iteration 23: 48k events/sec, p99 95ms</li>
+<li>After Iteration 25: 52k events/sec, p99 88ms</li>
+<li>ISC 1 and 2 now met</li>
+</ul>
+<p><strong>Iteration 26-28: Final verification</strong></p>
+<p>Run extended tests:</p>
+<ul>
+<li>7-day load test at production volume</li>
+<li>Chaos engineering (simulate node failures)</li>
+<li>Security audit</li>
+</ul>
+<p>VERIFY remaining ISC:</p>
+<ul>
+<li>ISC 3: 99.993% uptime achieved (exceeds 99.99% target)</li>
+<li>ISC 5: Zero data loss during 10 simulated failovers</li>
+</ul>
+<p>All ISC criteria met after 28 iterations. Time elapsed: 3 weeks.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="case-study-3-company-determined---200-iterations">Case Study 3: Company (DETERMINED - 200+ iterations)<a href="#case-study-3-company-determined---200-iterations" class="hash-link" aria-label="Direct link to Case Study 3: Company (DETERMINED - 200+ iterations)" title="Direct link to Case Study 3: Company (DETERMINED - 200+ iterations)">​</a></h2>
+<p>The most ambitious scale: building a company from idea to launch. This is where the Universal Algorithm truly proves its universality.</p>
+<p><strong>Iterations 1-50: Problem Space (Months 1-2)</strong></p>
+<p>Early iterations operate at strategic level:</p>
+<p><strong>OBSERVE:</strong> Market research, customer interviews, competitive analysis</p>
+<ul>
+<li>Healthcare providers spend $2B annually on scheduling software</li>
+<li>40% report dissatisfaction with existing solutions</li>
+<li>Key pain points: complex scheduling rules, poor mobile experience, limited integrations</li>
+</ul>
+<p><strong>THINK:</strong> Identify market opportunity and differentiation</p>
+<ul>
+<li>Existing solutions built 10+ years ago, pre-mobile era</li>
+<li>Modern tech stack enables better UX and performance</li>
+<li>AI-powered scheduling optimization creates competitive moat</li>
+</ul>
+<p><strong>PLAN:</strong> Define MVP and go-to-market strategy</p>
+<ul>
+<li>ISC for company (high-level):<!-- -->
+<ol>
+<li>Product launched with 5 paying customers</li>
+<li>$50k MRR achieved</li>
+<li>Monthly churn under 10%</li>
+<li>Net Promoter Score above 50</li>
+<li>Product-market fit validated (qualitative + quantitative)</li>
+</ol>
+</li>
+</ul>
+<p><strong>BUILD:</strong> Business plan, financial model, pitch deck</p>
+<p><strong>EXECUTE:</strong> Fundraise, incorporate, hire founding team</p>
+<p><strong>VERIFY:</strong> $2M seed round raised, 3 engineers hired, legal entity formed</p>
+<p><strong>LEARN:</strong> Investor feedback surfaced concerns about sales strategy—needs refinement</p>
+<p><strong>Iterations 51-100: Product Development (Months 3-5)</strong></p>
+<p>Now we recurse into product-level planning. Each major feature becomes its own THOROUGH-level task with its own ISC and Ralph Loop.</p>
+<p>The company-level Universal Algorithm spawns child algorithms:</p>
+<ul>
+<li>Feature 1: Core scheduling engine (THOROUGH, 35 iterations)</li>
+<li>Feature 2: Mobile application (THOROUGH, 42 iterations)</li>
+<li>Feature 3: Integration platform (STANDARD, 18 iterations)</li>
+</ul>
+<p>Each feature&#x27;s ISC rolls up to company ISC:</p>
+<ul>
+<li>Feature 1 completion → enables ISC 1 (product launch)</li>
+<li>Feature 2 completion → improves ISC 4 (NPS via mobile UX)</li>
+<li>Feature 3 completion → enables ISC 2 (MRR via integration upsells)</li>
+</ul>
+<p><strong>Iterations 101-150: Go-to-Market (Months 6-8)</strong></p>
+<p><strong>OBSERVE:</strong> Beta user feedback, usage analytics, support tickets</p>
+<p><strong>THINK:</strong> Initial users love mobile app, frustrated by integration limitations</p>
+<p><strong>PLAN:</strong> Prioritize integration expansion, defer advanced scheduling features</p>
+<p><strong>BUILD:</strong> 5 new integrations (EHR systems, payment processors)</p>
+<p><strong>EXECUTE:</strong> Sales outreach, onboarding new customers</p>
+<p><strong>VERIFY:</strong></p>
+<ul>
+<li>ISC 1: Launched with 8 paying customers (exceeded target of 5)</li>
+<li>ISC 2: $28k MRR (need $50k)</li>
+<li>ISC 3: 7% monthly churn (under 10% target)</li>
+<li>ISC 4: NPS 62 (exceeded target of 50)</li>
+<li>ISC 5: Product-market fit unclear—need more data</li>
+</ul>
+<p><strong>LEARN:</strong> Revenue below target but user satisfaction high—focus on customer acquisition, not product changes</p>
+<p><strong>Iterations 151-200: Scale (Months 9-12)</strong></p>
+<p><strong>OBSERVE:</strong> Sales funnel metrics, CAC, LTV, expansion revenue</p>
+<p><strong>THINK:</strong> Current customers expanding usage, referrals strong—product works, need volume</p>
+<p><strong>PLAN:</strong> Invest in marketing, optimize sales process, build referral program</p>
+<p><strong>BUILD:</strong> Marketing campaigns, sales playbooks, referral incentives</p>
+<p><strong>EXECUTE:</strong> Launch campaigns, hire sales reps, implement referral system</p>
+<p><strong>VERIFY:</strong></p>
+<ul>
+<li>ISC 2: $54k MRR (exceeded $50k target)</li>
+<li>ISC 5: Product-market fit validated (80% would be &quot;very disappointed&quot; without product)</li>
+</ul>
+<p><strong>Result:</strong> All company ISC criteria met after 200+ iterations spanning 12 months. Company successfully launched, product-market fit achieved, growth trajectory established.</p>
+<p>The same algorithm that fixed a database index in 4 iterations built an entire company in 200+ iterations. The only difference: scope and persistence.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="memory-system-context-evolution-over-time">Memory System: Context Evolution Over Time<a href="#memory-system-context-evolution-over-time" class="hash-link" aria-label="Direct link to Memory System: Context Evolution Over Time" title="Direct link to Memory System: Context Evolution Over Time">​</a></h2>
+<p>As tasks scale from QUICK to DETERMINED, context accumulates. The memory system manages this through a three-tier temperature model:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="hot-memory-active-context">Hot Memory (Active Context)<a href="#hot-memory-active-context" class="hash-link" aria-label="Direct link to Hot Memory (Active Context)" title="Direct link to Hot Memory (Active Context)">​</a></h3>
+<ul>
+<li>Current iteration state</li>
+<li>Recent decisions and their rationale</li>
+<li>Active ISC criteria and verification results</li>
+<li>Storage: Redis (fast access, 1-hour TTL)</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="warm-memory-session-context">Warm Memory (Session Context)<a href="#warm-memory-session-context" class="hash-link" aria-label="Direct link to Warm Memory (Session Context)" title="Direct link to Warm Memory (Session Context)">​</a></h3>
+<ul>
+<li>Last 10 iterations of learnings</li>
+<li>Task history and decision log</li>
+<li>Related task connections</li>
+<li>Storage: PostgreSQL (persistent, indexed)</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="cold-memory-long-term-knowledge">Cold Memory (Long-term Knowledge)<a href="#cold-memory-long-term-knowledge" class="hash-link" aria-label="Direct link to Cold Memory (Long-term Knowledge)" title="Direct link to Cold Memory (Long-term Knowledge)">​</a></h3>
+<ul>
+<li>Completed task archives</li>
+<li>Pattern libraries and reusable components</li>
+<li>Strategic decisions and their outcomes</li>
+<li>Storage: Vector database (semantic search enabled)</li>
+</ul>
+<p>This three-tier system ensures:</p>
+<ul>
+<li><strong>Fast access</strong> to immediately relevant context (hot)</li>
+<li><strong>Learning continuity</strong> within a task session (warm)</li>
+<li><strong>Pattern reuse</strong> across similar tasks (cold)</li>
+</ul>
+<p>Memory temperature automatically adjusts based on usage patterns. Frequently accessed warm memories get promoted to hot. Unused hot memories expire to warm. Cold memories are retrieved only via semantic similarity.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="hook-system-event-driven-execution">Hook System: Event-Driven Execution<a href="#hook-system-event-driven-execution" class="hash-link" aria-label="Direct link to Hook System: Event-Driven Execution" title="Direct link to Hook System: Event-Driven Execution">​</a></h2>
+<p>The Universal Algorithm integrates with a hook system for event-driven middleware—enabling custom logic at every phase.</p>
+<p>Hooks can be registered for:</p>
+<ul>
+<li><strong>Pre-phase hooks:</strong> Run before each phase executes (e.g., load domain knowledge before THINK)</li>
+<li><strong>Post-phase hooks:</strong> Run after each phase completes (e.g., update dashboard after OBSERVE)</li>
+<li><strong>Iteration hooks:</strong> Run before/after full iterations (e.g., checkpoint state)</li>
+<li><strong>Lifecycle hooks:</strong> Run at task start/completion (e.g., generate reports)</li>
+</ul>
+<p>This enables powerful customizations without modifying core algorithm:</p>
+<ul>
+<li><strong>Compliance:</strong> Add approval gates before EXECUTE for production changes</li>
+<li><strong>Observability:</strong> Inject logging at every phase transition</li>
+<li><strong>Cost control:</strong> Check budget before expensive THINK operations</li>
+<li><strong>Integration:</strong> Notify external systems of progress</li>
+<li><strong>Domain logic:</strong> Load industry-specific knowledge before THINK</li>
+</ul>
+<p>Hooks compose. You can stack multiple hooks per phase, each adding a layer of capability.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="implementation-guide">Implementation Guide<a href="#implementation-guide" class="hash-link" aria-label="Direct link to Implementation Guide" title="Direct link to Implementation Guide">​</a></h2>
+<p>Ready to implement this framework? Here&#x27;s the practical path:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="level-1-manual-human-driven">Level 1: Manual (Human-Driven)<a href="#level-1-manual-human-driven" class="hash-link" aria-label="Direct link to Level 1: Manual (Human-Driven)" title="Direct link to Level 1: Manual (Human-Driven)">​</a></h3>
+<p>Start by using the algorithm as a mental model. When facing any task:</p>
+<ol>
+<li><strong>OBSERVE:</strong> Write down current state explicitly</li>
+<li><strong>THINK:</strong> Document your analysis and root causes</li>
+<li><strong>PLAN:</strong> Define ISC criteria before starting work</li>
+<li><strong>BUILD:</strong> Create artifacts intentionally</li>
+<li><strong>EXECUTE:</strong> Take action deliberately</li>
+<li><strong>VERIFY:</strong> Check progress against ISC</li>
+<li><strong>LEARN:</strong> Document discoveries</li>
+</ol>
+<p>This alone improves task clarity and reduces false completion.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="level-2-semi-automated-tool-assisted">Level 2: Semi-Automated (Tool-Assisted)<a href="#level-2-semi-automated-tool-assisted" class="hash-link" aria-label="Direct link to Level 2: Semi-Automated (Tool-Assisted)" title="Direct link to Level 2: Semi-Automated (Tool-Assisted)">​</a></h3>
+<p>Introduce tooling to track ISC and iterations. Build a simple CLI or use task management software to:</p>
+<ul>
+<li>Define tasks with explicit ISC criteria</li>
+<li>Track iteration count and progress</li>
+<li>Log learnings from each iteration</li>
+<li>Visualize completion percentage</li>
+</ul>
+<p>This gives you mechanical progress tracking and prevents premature completion.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="level-3-fully-automated-agent-driven">Level 3: Fully Automated (Agent-Driven)<a href="#level-3-fully-automated-agent-driven" class="hash-link" aria-label="Direct link to Level 3: Fully Automated (Agent-Driven)" title="Direct link to Level 3: Fully Automated (Agent-Driven)">​</a></h3>
+<p>Build or integrate with an agent system that executes the algorithm autonomously. The agent handles routine execution while you focus on ISC definition and verification.</p>
+<p>At this level, you&#x27;re orchestrating AI agents that follow the Universal Algorithm, freeing you to work at higher levels of abstraction.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="the-15-pai-principles">The 15 PAI Principles<a href="#the-15-pai-principles" class="hash-link" aria-label="Direct link to The 15 PAI Principles" title="Direct link to The 15 PAI Principles">​</a></h2>
+<p>The Universal Algorithm is one component of PAI v2.1. The full system is guided by 15 principles that ensure consistency and quality:</p>
+<ol>
+<li><strong>Verifiability:</strong> All progress must be measurable via ISC</li>
+<li><strong>Composability:</strong> Tasks decompose into subtasks using same algorithm</li>
+<li><strong>Persistence:</strong> Context survives interruptions (Ralph Loop)</li>
+<li><strong>Efficiency:</strong> Match resource level to task complexity</li>
+<li><strong>Clarity:</strong> State must be explicit and observable</li>
+<li><strong>Adaptability:</strong> Learn from each iteration</li>
+<li><strong>Completeness:</strong> Continue until ISC satisfied, not until &quot;good enough&quot;</li>
+<li><strong>Hierarchy:</strong> Support tasks at all scales (TRIVIAL → DETERMINED)</li>
+<li><strong>Traceability:</strong> Maintain decision log for all phases</li>
+<li><strong>Separation:</strong> Distinguish BUILD from EXECUTE</li>
+<li><strong>Hooks:</strong> Enable extension without core modification</li>
+<li><strong>Memory:</strong> Manage context temperature (hot/warm/cold)</li>
+<li><strong>Models:</strong> Select appropriate AI model per phase/effort</li>
+<li><strong>Collaboration:</strong> Enable multi-agent coordination</li>
+<li><strong>Human-in-loop:</strong> Escalate blockers requiring judgment</li>
+</ol>
+<p>These aren&#x27;t aspirational values—they&#x27;re implemented constraints that the system enforces.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="what-makes-this-universal">What Makes This Universal<a href="#what-makes-this-universal" class="hash-link" aria-label="Direct link to What Makes This Universal" title="Direct link to What Makes This Universal">​</a></h2>
+<p>Three properties make this algorithm truly universal:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="1-scale-invariance">1. Scale Invariance<a href="#1-scale-invariance" class="hash-link" aria-label="Direct link to 1. Scale Invariance" title="Direct link to 1. Scale Invariance">​</a></h3>
+<p>The algorithm works identically whether the task takes 30 seconds or 3 years. Only the ISC scope changes. Fixing a typo and building a company both follow:</p>
+<p>OBSERVE → THINK → PLAN → BUILD → EXECUTE → VERIFY → LEARN</p>
+<p>The number of iterations scales, but the structure remains constant.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-domain-independence">2. Domain Independence<a href="#2-domain-independence" class="hash-link" aria-label="Direct link to 2. Domain Independence" title="Direct link to 2. Domain Independence">​</a></h3>
+<p>Nothing in the algorithm is specific to software. It applies equally to:</p>
+<ul>
+<li>Writing code (OBSERVE: read codebase, THINK: identify architecture, PLAN: design solution...)</li>
+<li>Writing essays (OBSERVE: research topic, THINK: organize arguments, PLAN: outline structure...)</li>
+<li>Cooking recipes (OBSERVE: check ingredients, THINK: understand technique, PLAN: sequence steps...)</li>
+<li>Running companies (OBSERVE: analyze market, THINK: identify opportunity, PLAN: strategy...)</li>
+</ul>
+<p>The seven phases are fundamental to problem-solving itself.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="3-verifiable-termination">3. Verifiable Termination<a href="#3-verifiable-termination" class="hash-link" aria-label="Direct link to 3. Verifiable Termination" title="Direct link to 3. Verifiable Termination">​</a></h3>
+<p>Unlike heuristic approaches (&quot;keep working until it feels done&quot;), ISC provides objective completion criteria. Tasks terminate when all criteria are met—not before, not after.</p>
+<p>This eliminates both premature stopping (shipped before ISC met) and infinite iteration (working past completion).</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="common-pitfalls-and-solutions">Common Pitfalls and Solutions<a href="#common-pitfalls-and-solutions" class="hash-link" aria-label="Direct link to Common Pitfalls and Solutions" title="Direct link to Common Pitfalls and Solutions">​</a></h2>
+<p>After implementing this framework across 100+ tasks, patterns of failure emerged:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="pitfall-1-vague-isc-criteria">Pitfall 1: Vague ISC Criteria<a href="#pitfall-1-vague-isc-criteria" class="hash-link" aria-label="Direct link to Pitfall 1: Vague ISC Criteria" title="Direct link to Pitfall 1: Vague ISC Criteria">​</a></h3>
+<p><strong>Problem:</strong> &quot;Make the API faster&quot; is not verifiable.</p>
+<p><strong>Solution:</strong> Quantify everything. &quot;p95 API latency under 500ms measured over 1000 requests&quot; is verifiable.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="pitfall-2-skipping-observe">Pitfall 2: Skipping OBSERVE<a href="#pitfall-2-skipping-observe" class="hash-link" aria-label="Direct link to Pitfall 2: Skipping OBSERVE" title="Direct link to Pitfall 2: Skipping OBSERVE">​</a></h3>
+<p><strong>Problem:</strong> Jumping straight to solution without understanding current state.</p>
+<p><strong>Solution:</strong> Force explicit OBSERVE artifacts before allowing THINK. No measurement = no iteration.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="pitfall-3-buildexecute-confusion">Pitfall 3: BUILD/EXECUTE Confusion<a href="#pitfall-3-buildexecute-confusion" class="hash-link" aria-label="Direct link to Pitfall 3: BUILD/EXECUTE Confusion" title="Direct link to Pitfall 3: BUILD/EXECUTE Confusion">​</a></h3>
+<p><strong>Problem:</strong> Making production changes (EXECUTE) while still developing solution (BUILD).</p>
+<p><strong>Solution:</strong> Require explicit transition gate. BUILD produces artifacts, EXECUTE deploys them.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="pitfall-4-insufficient-effort-classification">Pitfall 4: Insufficient Effort Classification<a href="#pitfall-4-insufficient-effort-classification" class="hash-link" aria-label="Direct link to Pitfall 4: Insufficient Effort Classification" title="Direct link to Pitfall 4: Insufficient Effort Classification">​</a></h3>
+<p><strong>Problem:</strong> Using QUICK for complex architecture, running out of iterations before completion.</p>
+<p><strong>Solution:</strong> Conservative classification. When uncertain, choose higher effort level.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="pitfall-5-ignoring-learn">Pitfall 5: Ignoring LEARN<a href="#pitfall-5-ignoring-learn" class="hash-link" aria-label="Direct link to Pitfall 5: Ignoring LEARN" title="Direct link to Pitfall 5: Ignoring LEARN">​</a></h3>
+<p><strong>Problem:</strong> Iterations repeat mistakes because learnings not captured.</p>
+<p><strong>Solution:</strong> Make LEARN artifacts mandatory, reviewed before next OBSERVE.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="future-directions">Future Directions<a href="#future-directions" class="hash-link" aria-label="Direct link to Future Directions" title="Direct link to Future Directions">​</a></h2>
+<p>Where does this framework evolve next?</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="multi-agent-orchestration">Multi-Agent Orchestration<a href="#multi-agent-orchestration" class="hash-link" aria-label="Direct link to Multi-Agent Orchestration" title="Direct link to Multi-Agent Orchestration">​</a></h3>
+<p>Currently, one agent executes one task. The next frontier: coordinating multiple agents on DETERMINED tasks.</p>
+<p>Imagine building a product:</p>
+<ul>
+<li>Agent A: Backend architecture (THOROUGH)</li>
+<li>Agent B: Frontend development (THOROUGH)</li>
+<li>Agent C: Infrastructure deployment (STANDARD)</li>
+</ul>
+<p>Each agent runs its own Universal Algorithm instance. Coordination happens via:</p>
+<ul>
+<li>Shared ISC (changes in one affect others)</li>
+<li>Dependency tracking (Agent C blocked until Agent A completes)</li>
+<li>Context sharing (Agent B learns from Agent A&#x27;s API design)</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="reinforcement-learning-on-isc">Reinforcement Learning on ISC<a href="#reinforcement-learning-on-isc" class="hash-link" aria-label="Direct link to Reinforcement Learning on ISC" title="Direct link to Reinforcement Learning on ISC">​</a></h3>
+<p>The ISC system generates training data: task description → plan → ISC → outcome. This enables learning:</p>
+<ul>
+<li>Which ISC criteria predict success?</li>
+<li>What effort classification minimizes iterations?</li>
+<li>Which model selection strategy optimizes cost/quality?</li>
+</ul>
+<p>Over time, the system learns to define better ISC from historical patterns.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="cross-domain-pattern-transfer">Cross-Domain Pattern Transfer<a href="#cross-domain-pattern-transfer" class="hash-link" aria-label="Direct link to Cross-Domain Pattern Transfer" title="Direct link to Cross-Domain Pattern Transfer">​</a></h3>
+<p>As cold memory accumulates completed tasks, patterns emerge:</p>
+<ul>
+<li>&quot;Optimization tasks typically need 3-5 iterations&quot;</li>
+<li>&quot;Database migrations require explicit rollback verification&quot;</li>
+<li>&quot;API design benefits from prototyping in PLAN phase&quot;</li>
+</ul>
+<p>These patterns can transfer across domains. A performance optimization pattern from backend code might apply to database query optimization.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="conclusion">Conclusion<a href="#conclusion" class="hash-link" aria-label="Direct link to Conclusion" title="Direct link to Conclusion">​</a></h2>
+<p>The Universal Algorithm isn&#x27;t a productivity hack or a time management technique. It&#x27;s a formalization of how effective problem-solving actually works, made explicit and verifiable.</p>
+<p>Every task is a gap between current and ideal. Every gap closes through iteration. Every iteration follows the same seven phases. Progress is measured mechanically through ISC. Effort scales from TRIVIAL to DETERMINED. Models match task complexity. Memory preserves context. Hooks enable extension.</p>
+<p>This framework has handled everything from fixing typos to designing distributed systems to building products. The algorithm didn&#x27;t change. Only the scope and persistence changed.</p>
+<p>That&#x27;s what makes it universal.</p>
+<hr>
+<p>The complete PAI v2.1 specification includes:</p>
+<ul>
+<li>Detailed phase execution protocols</li>
+<li>ISC template library</li>
+<li>Model selection matrices</li>
+<li>Hook system architecture</li>
+<li>Memory management implementation</li>
+<li>Multi-agent coordination patterns</li>
+</ul>
+<p>If you&#x27;re building agent systems, managing complex projects, or just want better clarity on progress, the Universal Algorithm provides a concrete, verifiable framework.</p>
+<p>What problems would you apply this to? What ISC criteria matter in your domain? I&#x27;d love to hear how others adapt this framework.</p>
+<hr>
+<p><em>Jon Roosevelt is an AI architect building production agent systems. He specializes in making AI infrastructure practical, measurable, and reliable—turning conceptual frameworks into working systems that ship products.</em></p></div><footer class="docusaurus-mt-lg"><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col"><b>Tags:</b><ul class="tags_jXut padding--none margin-left--sm"><li class="tag_QGVx"><a title="Articles about artificial intelligence and machine learning" class="tag_zVej tagRegular_sFm0" href="/blog/tags/tags/ai">AI</a></li><li class="tag_QGVx"><a title="System architecture and design patterns" class="tag_zVej tagRegular_sFm0" href="/blog/tags/tags/architecture">Architecture</a></li><li class="tag_QGVx"><a title="Algorithm design, execution frameworks, and computational thinking" class="tag_zVej tagRegular_sFm0" href="/blog/tags/tags/algorithms">Algorithms</a></li><li class="tag_QGVx"><a title="Productivity systems, time management, and personal effectiveness" class="tag_zVej tagRegular_sFm0" href="/blog/tags/tags/productivity">Productivity</a></li><li class="tag_QGVx"><a title="Holistic approaches to complex problems and system design" class="tag_zVej tagRegular_sFm0" href="/blog/tags/tags/systems-thinking">Systems Thinking</a></li><li class="tag_QGVx"><a title="Tools and approaches for process automation" class="tag_zVej tagRegular_sFm0" href="/blog/tags/tags/automation">Automation</a></li></ul></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Blog post page navigation"><a class="pagination-nav__link pagination-nav__link--prev" href="/blog/terminal-design-philosophy-rethinking-multiplexers"><div class="pagination-nav__sublabel">Newer post</div><div class="pagination-nav__label">Why Terminal Multiplexers Are an Anti-Pattern: Lessons from Kitty&#x27;s Creator</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/blog/three-levels-of-why-primal-motivation-psychology"><div class="pagination-nav__sublabel">Older post</div><div class="pagination-nav__label">The Three Levels of Why: Why Surface Motivation Fails and How to Find Your Primal Drive</div></a></nav></main><div class="col col--2"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#the-problem-with-task-specific-thinking" class="table-of-contents__link toc-highlight">The Problem with Task-Specific Thinking</a></li><li><a href="#the-universal-algorithm-current--ideal-via-verifiable-iteration" class="table-of-contents__link toc-highlight">The Universal Algorithm: Current → Ideal via Verifiable Iteration</a><ul><li><a href="#phase-1-observe---establish-current-state" class="table-of-contents__link toc-highlight">Phase 1: OBSERVE - Establish Current State</a></li><li><a href="#phase-2-think---analyze-the-gap" class="table-of-contents__link toc-highlight">Phase 2: THINK - Analyze the Gap</a></li><li><a href="#phase-3-plan---define-verifiable-steps" class="table-of-contents__link toc-highlight">Phase 3: PLAN - Define Verifiable Steps</a></li><li><a href="#phase-4-build---create-artifacts" class="table-of-contents__link toc-highlight">Phase 4: BUILD - Create Artifacts</a></li><li><a href="#phase-5-execute---take-action" class="table-of-contents__link toc-highlight">Phase 5: EXECUTE - Take Action</a></li><li><a href="#phase-6-verify---measure-progress" class="table-of-contents__link toc-highlight">Phase 6: VERIFY - Measure Progress</a></li><li><a href="#phase-7-learn---update-context" class="table-of-contents__link toc-highlight">Phase 7: LEARN - Update Context</a></li></ul></li><li><a href="#isc-tracking-measuring-the-gap" class="table-of-contents__link toc-highlight">ISC Tracking: Measuring the Gap</a></li><li><a href="#the-ralph-loop-persistent-iteration-until-completion" class="table-of-contents__link toc-highlight">The Ralph Loop: Persistent Iteration Until Completion</a></li><li><a href="#effort-classification-and-model-selection" class="table-of-contents__link toc-highlight">Effort Classification and Model Selection</a><ul><li><a href="#trivial-1-2-iterations-haiku" class="table-of-contents__link toc-highlight">TRIVIAL (1-2 iterations, Haiku)</a></li><li><a href="#quick-3-5-iterations-haikusonnet" class="table-of-contents__link toc-highlight">QUICK (3-5 iterations, Haiku/Sonnet)</a></li><li><a href="#standard-5-15-iterations-sonnet" class="table-of-contents__link toc-highlight">STANDARD (5-15 iterations, Sonnet)</a></li><li><a href="#thorough-15-50-iterations-sonnetopus" class="table-of-contents__link toc-highlight">THOROUGH (15-50 iterations, Sonnet/Opus)</a></li><li><a href="#determined-50-iterations-opus" class="table-of-contents__link toc-highlight">DETERMINED (50+ iterations, Opus)</a></li></ul></li><li><a href="#case-study-1-bug-fix-quick---4-iterations" class="table-of-contents__link toc-highlight">Case Study 1: Bug Fix (QUICK - 4 iterations)</a></li><li><a href="#case-study-2-architecture-thorough---28-iterations" class="table-of-contents__link toc-highlight">Case Study 2: Architecture (THOROUGH - 28 iterations)</a></li><li><a href="#case-study-3-company-determined---200-iterations" class="table-of-contents__link toc-highlight">Case Study 3: Company (DETERMINED - 200+ iterations)</a></li><li><a href="#memory-system-context-evolution-over-time" class="table-of-contents__link toc-highlight">Memory System: Context Evolution Over Time</a><ul><li><a href="#hot-memory-active-context" class="table-of-contents__link toc-highlight">Hot Memory (Active Context)</a></li><li><a href="#warm-memory-session-context" class="table-of-contents__link toc-highlight">Warm Memory (Session Context)</a></li><li><a href="#cold-memory-long-term-knowledge" class="table-of-contents__link toc-highlight">Cold Memory (Long-term Knowledge)</a></li></ul></li><li><a href="#hook-system-event-driven-execution" class="table-of-contents__link toc-highlight">Hook System: Event-Driven Execution</a></li><li><a href="#implementation-guide" class="table-of-contents__link toc-highlight">Implementation Guide</a><ul><li><a href="#level-1-manual-human-driven" class="table-of-contents__link toc-highlight">Level 1: Manual (Human-Driven)</a></li><li><a href="#level-2-semi-automated-tool-assisted" class="table-of-contents__link toc-highlight">Level 2: Semi-Automated (Tool-Assisted)</a></li><li><a href="#level-3-fully-automated-agent-driven" class="table-of-contents__link toc-highlight">Level 3: Fully Automated (Agent-Driven)</a></li></ul></li><li><a href="#the-15-pai-principles" class="table-of-contents__link toc-highlight">The 15 PAI Principles</a></li><li><a href="#what-makes-this-universal" class="table-of-contents__link toc-highlight">What Makes This Universal</a><ul><li><a href="#1-scale-invariance" class="table-of-contents__link toc-highlight">1. Scale Invariance</a></li><li><a href="#2-domain-independence" class="table-of-contents__link toc-highlight">2. Domain Independence</a></li><li><a href="#3-verifiable-termination" class="table-of-contents__link toc-highlight">3. Verifiable Termination</a></li></ul></li><li><a href="#common-pitfalls-and-solutions" class="table-of-contents__link toc-highlight">Common Pitfalls and Solutions</a><ul><li><a href="#pitfall-1-vague-isc-criteria" class="table-of-contents__link toc-highlight">Pitfall 1: Vague ISC Criteria</a></li><li><a href="#pitfall-2-skipping-observe" class="table-of-contents__link toc-highlight">Pitfall 2: Skipping OBSERVE</a></li><li><a href="#pitfall-3-buildexecute-confusion" class="table-of-contents__link toc-highlight">Pitfall 3: BUILD/EXECUTE Confusion</a></li><li><a href="#pitfall-4-insufficient-effort-classification" class="table-of-contents__link toc-highlight">Pitfall 4: Insufficient Effort Classification</a></li><li><a href="#pitfall-5-ignoring-learn" class="table-of-contents__link toc-highlight">Pitfall 5: Ignoring LEARN</a></li></ul></li><li><a href="#future-directions" class="table-of-contents__link toc-highlight">Future Directions</a><ul><li><a href="#multi-agent-orchestration" class="table-of-contents__link toc-highlight">Multi-Agent Orchestration</a></li><li><a href="#reinforcement-learning-on-isc" class="table-of-contents__link toc-highlight">Reinforcement Learning on ISC</a></li><li><a href="#cross-domain-pattern-transfer" class="table-of-contents__link toc-highlight">Cross-Domain Pattern Transfer</a></li></ul></li><li><a href="#conclusion" class="table-of-contents__link toc-highlight">Conclusion</a></li></ul></div></div></div></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="col footer__col"><div class="footer__title">Connect</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://www.linkedin.com/in/jonroosevelt/" target="_blank" rel="noopener noreferrer" class="footer__link-item">LinkedIn<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2026 Jon Roosevelt, Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
