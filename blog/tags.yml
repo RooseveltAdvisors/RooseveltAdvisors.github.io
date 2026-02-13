@@ -437,3 +437,23 @@ evidence-based-medicine:
   label: Evidence-Based Medicine
   permalink: /tags/evidence-based-medicine
   description: Clinical decision-making based on research evidence and best practices
+
+computer-vision:
+  label: Computer Vision
+  permalink: /tags/computer-vision
+  description: Computer vision, image recognition, and visual AI applications
+
+self-hosted:
+  label: Self-Hosted
+  permalink: /tags/self-hosted
+  description: Self-hosted infrastructure and on-premise deployments
+
+ollama:
+  label: Ollama
+  permalink: /tags/ollama
+  description: Running local LLMs with Ollama
+
+ocr:
+  label: OCR
+  permalink: /tags/ocr
+  description: Optical character recognition and document extraction
