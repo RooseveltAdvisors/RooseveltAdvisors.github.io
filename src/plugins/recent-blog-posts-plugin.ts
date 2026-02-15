@@ -13,8 +13,18 @@ interface BlogListItem {
 }
 
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 function formatDate(dateString: string): string {
@@ -42,13 +52,17 @@ export default async function recentBlogPostsPlugin(
               title: post.metadata?.title || "",
               permalink: post.metadata?.permalink || "",
               date: post.metadata?.date || "",
-              formattedDate: post.metadata?.formattedDate || formatDate(post.metadata?.date || ""),
+              formattedDate:
+                post.metadata?.formattedDate ||
+                formatDate(post.metadata?.date || ""),
               image: post.metadata?.frontMatter?.image || "",
               description: post.metadata?.description || "",
               tags:
-                post.metadata?.tags?.map((t: any) =>
-                  typeof t === "string" ? t : t?.label || ""
-                ).filter(Boolean) || [],
+                post.metadata?.tags
+                  ?.map((t: any) =>
+                    typeof t === "string" ? t : t?.label || "",
+                  )
+                  .filter(Boolean) || [],
               readingTime: Math.round(post.metadata?.readingTime || 0),
               unlisted: post.metadata?.unlisted || false,
             }));
