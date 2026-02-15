@@ -4,6 +4,10 @@ interface BlogListItem {
   title: string;
   permalink: string;
   date: string;
+  image?: string;
+  description?: string;
+  tags?: string[];
+  readingTime?: number;
   unlisted?: boolean;
 }
 
@@ -29,6 +33,11 @@ export default async function recentBlogPostsPlugin(
               title: post.metadata?.title || "",
               permalink: post.metadata?.permalink || "",
               date: post.metadata?.date || "",
+              image: post.metadata?.frontMatter?.image || "",
+              description: post.metadata?.description || "",
+              tags:
+                post.metadata?.tags?.map((t: any) => t.label || t) || [],
+              readingTime: Math.round(post.metadata?.readingTime || 0),
               unlisted: post.metadata?.unlisted || false,
             }));
 

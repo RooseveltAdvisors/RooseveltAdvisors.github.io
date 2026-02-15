@@ -16,6 +16,10 @@ interface BlogListItem {
   title: string;
   permalink: string;
   date: string;
+  image?: string;
+  description?: string;
+  tags?: string[];
+  readingTime?: number;
   unlisted?: boolean;
 }
 
@@ -43,23 +47,17 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
       // Extract slug from permalink
       const slug = post.permalink.split("/").filter(Boolean).pop() || "";
 
-      // Extract date in YYYY-MM-DD format
-      const postDate = new Date(post.date);
-      const dateStr = postDate.toISOString().split("T")[0];
-
-      // Construct image path: /img/blog/[date]-[slug]/hero-banner.jpg
-      const imageUrl = `/img/blog/${dateStr}-${slug}/hero-banner.jpg`;
-
       return {
         id: slug,
         title: post.title,
-        description: "", // Not available in minimal post data
+        description: post.description || "",
         date: post.date,
         formattedDate: formatDate(post.date),
         permalink: post.permalink,
-        imageUrl,
-        tags: [], // Not available in minimal post data
-        readingTime: 5, // Default value
+        // Only set imageUrl if the post actually declared an image in frontmatter
+        imageUrl: post.image || undefined,
+        tags: post.tags || [],
+        readingTime: post.readingTime || 5,
       };
     });
   } catch (error) {
