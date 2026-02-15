@@ -4,11 +4,22 @@ interface BlogListItem {
   title: string;
   permalink: string;
   date: string;
+  formattedDate: string;
   image?: string;
   description?: string;
   tags?: string[];
   readingTime?: number;
   unlisted?: boolean;
+}
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+function formatDate(dateString: string): string {
+  const d = new Date(dateString);
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 }
 
 export default async function recentBlogPostsPlugin(
@@ -20,23 +31,24 @@ export default async function recentBlogPostsPlugin(
       const { setGlobalData } = actions;
 
       try {
-        // Get blog content from allContent (populated by blog plugin)
         const blogContent = allContent["docusaurus-plugin-content-blog"]?.[
           "default"
         ] as any;
 
         if (blogContent?.blogPosts && Array.isArray(blogContent.blogPosts)) {
-          // Extract recent posts data (top 5)
           const recentPosts: BlogListItem[] = blogContent.blogPosts
             .slice(0, 5)
             .map((post: any) => ({
               title: post.metadata?.title || "",
               permalink: post.metadata?.permalink || "",
               date: post.metadata?.date || "",
+              formattedDate: post.metadata?.formattedDate || formatDate(post.metadata?.date || ""),
               image: post.metadata?.frontMatter?.image || "",
               description: post.metadata?.description || "",
               tags:
-                post.metadata?.tags?.map((t: any) => t.label || t) || [],
+                post.metadata?.tags?.map((t: any) =>
+                  typeof t === "string" ? t : t?.label || ""
+                ).filter(Boolean) || [],
               readingTime: Math.round(post.metadata?.readingTime || 0),
               unlisted: post.metadata?.unlisted || false,
             }));

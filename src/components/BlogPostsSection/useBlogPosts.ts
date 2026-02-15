@@ -16,6 +16,7 @@ interface BlogListItem {
   title: string;
   permalink: string;
   date: string;
+  formattedDate?: string;
   image?: string;
   description?: string;
   tags?: string[];
@@ -29,22 +30,17 @@ interface RecentPostsPluginData {
 
 export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
   try {
-    // Get blog posts from our custom plugin that injects them into global data
     const pluginData = usePluginData(
       "recent-blog-posts-plugin",
     ) as RecentPostsPluginData;
 
     if (!pluginData?.recentPosts || pluginData.recentPosts.length === 0) {
-      console.error("No blog posts found from recent-blog-posts-plugin");
       return [];
     }
 
-    // Get the most recent posts (already sorted by date in descending order)
     const recentPosts = pluginData.recentPosts.slice(0, count);
 
-    // Transform to FeaturedBlogPost format
     return recentPosts.map((post) => {
-      // Extract slug from permalink
       const slug = post.permalink.split("/").filter(Boolean).pop() || "";
 
       return {
@@ -52,9 +48,9 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
         title: post.title,
         description: post.description || "",
         date: post.date,
-        formattedDate: formatDate(post.date),
+        // Use build-time formatted date to avoid SSR/client hydration mismatch
+        formattedDate: post.formattedDate || post.date,
         permalink: post.permalink,
-        // Only set imageUrl if the post actually declared an image in frontmatter
         imageUrl: post.image || undefined,
         tags: post.tags || [],
         readingTime: post.readingTime || 5,
@@ -63,18 +59,5 @@ export function useRecentBlogPosts(count: number = 3): FeaturedBlogPost[] {
   } catch (error) {
     console.error("Error loading blog posts:", error);
     return [];
-  }
-}
-
-function formatDate(dateString: string): string {
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  } catch {
-    return dateString;
   }
 }
