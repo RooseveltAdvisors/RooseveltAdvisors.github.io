@@ -8,9 +8,11 @@ image: /img/blog/2026-02-15-field-level-ensemble-ocr-insurance-cards/hero-banner
 
 I've been running OCR on insurance cards at our urgent care clinics for a few months now. Patients hand over their card at check-in, staff snaps a photo, and our system extracts member IDs, group numbers, payer names, and pharmacy details automatically. It works. Mostly.
 
-The problem is "mostly." Our single-model approach — minicpm-v:8b running through a self-hosted CardOCR API — was hitting about 56% exact match accuracy across 10 key fields on a 27-card test set. That means nearly half the fields needed manual correction. Staff were spending almost as much time fixing OCR output as they would have spent typing it manually.
+![Field-Level Ensemble OCR](/img/blog/2026-02-15-field-level-ensemble-ocr-insurance-cards/hero-banner.jpg)
 
 {/* truncate */}
+
+The problem is "mostly." Our single-model approach — minicpm-v:8b running through a self-hosted CardOCR API — was hitting about 56% exact match accuracy across 10 key fields on a 27-card test set. That means nearly half the fields needed manual correction. Staff were spending almost as much time fixing OCR output as they would have spent typing it manually.
 
 ## The Insight: Different Models Fail Differently
 
