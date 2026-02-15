@@ -1,0 +1,129 @@
+---
+slug: synology-backup-agent-kernel-6-17-patch
+title: "Patching Synology Active Backup for Linux to Run on Kernel 6.17"
+authors: [jon]
+tags: [linux, kernel, synology, backup, dkms, sysadmin, self-hosted]
+image: /img/blog/2026-02-15-synology-backup-agent-kernel-6-17-patch/hero-banner.jpg
+---
+
+Synology Active Backup for Business is one of the best self-hosted backup solutions out there — agent-based, centralized, bare-metal restore capable. There's just one problem: the Linux agent only officially supports kernels 2.6 through 6.8. My Ubuntu server was running 6.17, and the installer refused to even start.
+
+![Patching Synology Active Backup for Kernel 6.17](/img/blog/2026-02-15-synology-backup-agent-kernel-6-17-patch/hero-banner.jpg)
+
+{/* truncate */}
+
+## The Problem
+
+The Active Backup agent ships a kernel module called `synosnap` that provides block-level snapshot support. Between kernel 6.8 and 6.17, the Linux block device API went through multiple breaking changes — renamed structs, changed function signatures, removed fields. The DKMS build fails with dozens of compilation errors, and the installer script hard-exits when the module won't compile.
+
+No module, no snapshots. No snapshots, no backups.
+
+## The Strategy
+
+Rather than waiting for Synology to update their agent (which could be months), I patched the kernel module source myself. The approach:
+
+1. **Skip the broken installer** — install the userspace service directly via dpkg
+2. **Fix runtime dependencies** — the service needs libraries and paths the module package normally creates
+3. **Patch synosnap source** — fix every kernel API break between 6.8 and 6.17
+4. **Build and load** — compile the module, install it, configure auto-load on boot
+
+## What Broke Between 6.8 and 6.17
+
+The kernel API changes fell into a few categories. Here's the full damage report:
+
+| API Change | Kernel Version | Impact |
+|-----------|---------------|--------|
+| `bdev_open_by_path` replaced by `bdev_file_open_by_path` | 6.9+ | Every block device open/close path |
+| `blk_alloc_disk` gained a second argument | 6.9+ | Disk allocation in tracer |
+| `struct fd.file` removed, replaced by `fd_file()` macro | 6.12+ | ftrace and syscall hooking |
+| `BIO_THROTTLED` renamed to `BIO_QOS_THROTTLED` | 6.17 | BIO flag propagation |
+| `bio->bi_remaining` renamed to `bio->__bi_remaining` | 6.17 | Snapshot handle reference counting |
+| `submit_bio_noacct` return type changed to void | 6.17 | Submit bio passthrough |
+| `MS_RDONLY` replaced by `SB_RDONLY` | 6.x | Mount state checks |
+| `bd_has_submit_bio` field removed | 6.17 | Tracing transition logic |
+
+That's 11 source files requiring patches across 12 distinct API changes.
+
+## The Hardest Part: kernel-config.h
+
+The synosnap build system uses Makefile-based feature detection that completely fails on 6.17. Instead of debugging their configure system, I bypassed it entirely and wrote `kernel-config.h` by hand — 40+ feature flags declaring which APIs exist in my running kernel.
+
+The trickiest part is the symbol addresses. The module hooks system calls using direct kernel symbol addresses from `/proc/kallsyms`:
+
+```bash
+# Get the addresses you need
+sudo grep -w 'sys_call_table\|blk_mq_submit_bio\|blk_alloc_queue' /proc/kallsyms
+```
+
+These addresses change on every kernel build, which means **any kernel update requires regenerating this file**. Not ideal, but it works.
+
+## The Block Device API Migration
+
+The biggest patch was the block device open/close path. Kernel 6.9 replaced the `bdev_handle` pattern with a file-based API:
+
+```c
+#ifdef HAVE_BDEV_FILE_OPEN_BY_PATH
+// Kernel 6.9+: file-based block device API
+struct file *bdev_file = bdev_file_open_by_path(path, BLK_OPEN_READ, NULL, NULL);
+if (IS_ERR(bdev_file))
+    return PTR_ERR(bdev_file);
+dev->sd_base_dev = file_bdev(bdev_file);
+dev->sd_base_bdev_file = bdev_file;  // store for cleanup
+
+// Cleanup: bdev_fput(bdev_file) instead of bdev_release(handle)
+#elif defined HAVE_BDEV_OPEN_BY_PATH
+// Kernel 6.8: handle-based API
+// ...existing code...
+#endif
+```
+
+This pattern repeated across `tracer.c`, `bdev_state_handler.c`, and `ioctl_handlers.c`. Every place the module opens or closes a block device needed a new `#ifdef` branch.
+
+## The struct fd Surprise
+
+Kernel 6.12+ quietly changed `struct fd` so the `.file` field no longer exists. The fix is a one-liner macro, but it broke two files:
+
+```c
+// Old: f.file->private_data
+// New: fd_file(f)->private_data
+#ifdef fd_file
+    fc = fd_file(f)->private_data;
+#else
+    fc = f.file->private_data;
+#endif
+```
+
+Small change, but without it the module won't compile at all.
+
+## Build and Deploy
+
+After all patches, the module compiled clean:
+
+```bash
+cd /tmp/synosnap-patched
+make -C /lib/modules/$(uname -r)/build M=$(pwd) modules
+# synosnap.ko built successfully
+
+sudo insmod synosnap.ko
+ls /dev/synosnap-ctl  # snapshot device exists
+```
+
+For persistence across reboots:
+
+```bash
+sudo cp synosnap.ko /lib/modules/$(uname -r)/extra/
+sudo depmod -a
+echo "synosnap" | sudo tee /etc/modules-load.d/synosnap.conf
+```
+
+## What I Learned
+
+**1. Skip the installer, install the parts.** When vendor installers gate on unsupported configurations, extract the archive and install components individually. The userspace service worked perfectly — only the kernel module needed patching.
+
+**2. Manual kernel-config.h beats broken feature detection.** The module's configure system tried 40+ Makefile test compilations, most of which failed on 6.17. Writing the config header by hand took 20 minutes and worked first try.
+
+**3. Kernel API changes cluster by subsystem.** The block device API saw the most churn (6 of 12 patches). When you find one break in a subsystem, expect more in the same area.
+
+**4. Plan for kernel updates.** This patch works on 6.17.0-14-generic specifically. A kernel update will change `/proc/kallsyms` addresses and may introduce new API breaks. The right long-term fix is DKMS integration with a patched configure step — but for a single production server, manual rebuilds on the rare kernel update are acceptable.
+
+The backup agent is now running with full snapshot support on a kernel Synology won't officially support for months. Total time from "installer failed" to "first successful backup": about 4 hours. Most of that was reading kernel changelogs to understand what each API change actually did.
