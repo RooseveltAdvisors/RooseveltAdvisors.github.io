@@ -3,11 +3,14 @@ slug: claude-code-session-isolation-hooks
 title: "Debugging a Ghost in the Machine: Session Isolation for Claude Code Plugins"
 authors: [jon]
 tags: [claude-code, ai-tooling, hooks, plugins, debugging]
+image: /img/blog/2026-02-16-claude-code-session-isolation-hooks/hero-banner.jpg
 ---
 
 I run multiple Claude Code sessions in the same project all the time. One session handles a long-running task via a [Ralph Wiggum loop](https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum) (a self-referential iteration technique), while I open another session for a quick unrelated fix. Last week, the quick session started behaving strangely — instead of finishing and returning control, it got *hijacked* into the ralph loop running in the other session.
 
 The bug was subtle, reproducible, and taught me a lot about how Claude Code's hook system actually works under the hood.
+
+![Session Isolation for Claude Code Plugins](/img/blog/2026-02-16-claude-code-session-isolation-hooks/hero-banner.jpg)
 
 {/* truncate */}
 
