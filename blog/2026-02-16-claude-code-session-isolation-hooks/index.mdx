@@ -1,0 +1,109 @@
+---
+slug: claude-code-session-isolation-hooks
+title: "Debugging a Ghost in the Machine: Session Isolation for Claude Code Plugins"
+authors: [jon]
+tags: [claude-code, ai-tooling, hooks, plugins, debugging]
+---
+
+I run multiple Claude Code sessions in the same project all the time. One session handles a long-running task via a [Ralph Wiggum loop](https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum) (a self-referential iteration technique), while I open another session for a quick unrelated fix. Last week, the quick session started behaving strangely — instead of finishing and returning control, it got *hijacked* into the ralph loop running in the other session.
+
+The bug was subtle, reproducible, and taught me a lot about how Claude Code's hook system actually works under the hood.
+
+{/* truncate */}
+
+## How Claude Code Hooks Work
+
+Claude Code has an event-driven hook system. Plugins register shell scripts that fire on lifecycle events like `SessionStart`, `Stop`, `PreToolUse`, etc. The key detail: **hooks are global**. Every registered hook fires for *every* session in the project, not just the one that installed it.
+
+The Stop hook is particularly interesting. When Claude tries to end a conversation, Stop hooks can **block the exit** by returning a JSON payload:
+
+```json
+{
+  "decision": "block",
+  "reason": "Your next prompt goes here",
+  "systemMessage": "Context injected as a system message"
+}
+```
+
+This is how the Ralph Wiggum loop works — the Stop hook intercepts the exit, reads the loop's state file, and feeds the same prompt back in. Claude sees its previous work in the codebase and iterates on it. Elegant, until you run two sessions.
+
+## The Bug: Shared State, Global Hooks
+
+The ralph-wiggum plugin stored its loop state in a single file: `.claude/ralph-loop.local.md`. The Stop hook checked if this file existed and, if so, blocked the exit. The problem was obvious once I traced it:
+
+| Event | What Happened |
+|-------|---------------|
+| Session A runs `/ralph-loop` | Creates `.claude/ralph-loop.local.md` |
+| Session A works on task | Stop hook fires on exit, finds state file, blocks exit, feeds prompt back |
+| Session B opens for unrelated work | Same project directory, same plugin hooks registered |
+| Session B finishes its task | Stop hook fires, finds Session A's state file, **blocks Session B's exit** |
+| Session B is now in the ralph loop | Working on Session A's prompt with Session B's context |
+
+The Stop hook had no way to know *which session* it belonged to. It just checked: "does the state file exist?" Yes? Block exit.
+
+## The Fix: Session-Specific State Files
+
+Claude Code provides a `session_id` in the JSON payload that hooks receive via stdin. The fix uses this to scope state files per session:
+
+```bash
+# In the Stop hook — extract session_id from hook input
+HOOK_INPUT=$(cat)
+SESSION_ID=$(echo "$HOOK_INPUT" | jq -r '.session_id // empty')
+
+# Only look for THIS session's state file
+RALPH_STATE_FILE=".claude/ralph-loop.${SESSION_ID}.local.md"
+
+if [[ ! -f "$RALPH_STATE_FILE" ]]; then
+  # Not our loop — allow normal exit
+  exit 0
+fi
+```
+
+But there's a catch: the setup script (which creates the state file) runs via the Bash tool, not as a hook. It doesn't receive the same JSON input. So how does it know the session ID?
+
+## The Bridge: SessionStart + CLAUDE_ENV_FILE
+
+Claude Code has a mechanism called `CLAUDE_ENV_FILE` — during a `SessionStart` hook, you can write `export` statements to this file, and they become available as environment variables for all subsequent Bash commands in that session. This is the bridge:
+
+```bash
+#!/bin/bash
+# session-start-hook.sh — fires when any session begins
+HOOK_INPUT=$(cat)
+SESSION_ID=$(echo "$HOOK_INPUT" | jq -r '.session_id // empty')
+
+if [[ -n "$SESSION_ID" ]] && [[ -n "${CLAUDE_ENV_FILE:-}" ]]; then
+  echo "export CLAUDE_SESSION_ID='$SESSION_ID'" >> "$CLAUDE_ENV_FILE"
+fi
+```
+
+Now the setup script can read `$CLAUDE_SESSION_ID` and create the matching state file:
+
+```bash
+# In setup-ralph-loop.sh
+SESSION_ID="${CLAUDE_SESSION_ID:-$(date +%s%N | md5sum | cut -c1-12)}"
+RALPH_STATE_FILE=".claude/ralph-loop.${SESSION_ID}.local.md"
+```
+
+The fallback random ID handles the edge case where a session started before the new hook was installed.
+
+## Architecture: The Three-Script Pattern
+
+The complete solution uses three scripts coordinated through shared state:
+
+| Script | Lifecycle Event | Reads | Writes |
+|--------|----------------|-------|--------|
+| `session-start-hook.sh` | SessionStart | `session_id` from JSON | `CLAUDE_SESSION_ID` to env |
+| `setup-ralph-loop.sh` | User runs `/ralph-loop` | `CLAUDE_SESSION_ID` from env | `.claude/ralph-loop.{ID}.local.md` |
+| `stop-hook.sh` | Session tries to exit | `session_id` from JSON + state file | Blocks exit or allows it |
+
+The `session_id` value is the same in both the SessionStart and Stop hooks — Claude Code assigns it when the session begins and passes it consistently to all hooks throughout the session's lifetime.
+
+## What I Learned
+
+**Hooks are global, state must be local.** Any plugin that stores state in a fixed-name file will break when multiple sessions run in the same project. If you're writing a Claude Code plugin, always scope your state files by session ID.
+
+**CLAUDE_ENV_FILE is the bridge between hooks and commands.** Hooks receive rich JSON context (session ID, transcript path, CWD). Bash commands run via the tool don't. The `SessionStart` hook + `CLAUDE_ENV_FILE` pattern lets you promote hook-only data into environment variables that Bash commands can read. This is the canonical way to share session context across the plugin boundary.
+
+**Test with parallel sessions.** Single-session testing won't surface isolation bugs. Any time your plugin writes to the filesystem, ask: "what happens if two sessions both run this?" It's the concurrent-access problem, just at the AI session level instead of the thread level.
+
+The [fix is submitted upstream](https://github.com/anthropics/claude-code/pull/26077) to the ralph-wiggum plugin in the claude-code repo. If you've hit mysterious session interference with plugins, this is likely why.
