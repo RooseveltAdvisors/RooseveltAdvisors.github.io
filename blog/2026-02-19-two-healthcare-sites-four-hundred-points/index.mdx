@@ -1,0 +1,111 @@
+---
+slug: two-healthcare-sites-four-hundred-points
+title: "Two Healthcare Sites, 400 Lighthouse Points, and the Lessons That Got Us There"
+authors: [jon]
+tags: [web-performance, healthcare, lighthouse, cloudflare, seo]
+image: /img/blog/2026-02-19-two-healthcare-sites-four-hundred-points/hero-banner.jpg
+---
+
+When I checked our mobile Lighthouse scores last month, both of our clinic websites — [arcs.health](https://www.arcs.health) and [covenant.clinic](https://www.covenant.clinic) — were in rough shape. Not broken, but mediocre. The kind of scores that quietly cost you patients who bounce before the page finishes loading.
+
+covenant.clinic was mid-migration off Webflow. arcs.health was paying an invisible SPA tax on every homepage visit. Both had `robots.txt` files that Lighthouse flagged as invalid — even though our source files were perfectly fine.
+
+Over a few focused sessions, we brought both sites to **100/100/100/100** on mobile Lighthouse. Here's what actually mattered, what didn't, and what almost made things worse.
+
+![Two healthcare websites optimized to perfect Lighthouse scores](/img/blog/2026-02-19-two-healthcare-sites-four-hundred-points/hero-banner.jpg)
+
+{/* truncate */}
+
+## The Starting Point
+
+Both sites had different symptoms but shared root causes: architectural overhead, unoptimized media delivery, and CDN edge behavior we didn't control.
+
+| Site | Key Problems |
+|------|-------------|
+| arcs.health | Full SPA bundle on static homepage, oversized images, invalid robots.txt |
+| covenant.clinic | Webflow runtime remnants, render-blocking CSS, CLS from hero images, stale CDN cache |
+
+The temptation was to start tweaking — shave a few KB here, defer a script there. That's the wrong order.
+
+## Fix Architecture First, Optimize Second
+
+The single biggest win for arcs.health was realizing the homepage was downloading an entire SPA bundle for what is essentially a static marketing page. Every visitor paid the JavaScript tax for route code they'd never use.
+
+The fix was a lightweight static HTML shell for `/` that only loads the SPA framework when users navigate deeper:
+
+```html
+<script>
+  if (window.location.pathname !== '/') {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/assets/index.css';
+    document.head.appendChild(link);
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = '/assets/index.js';
+    document.body.appendChild(script);
+  }
+</script>
+```
+
+For covenant.clinic, the architecture fix was migrating off Webflow's hosting entirely. We stood up a dedicated Bun service, took ownership of every response header, and built an explicit redirect map for legacy booking paths.
+
+## The CSS Trap: When Faster FCP Hurts UX
+
+On covenant.clinic, we tried a textbook optimization — converting the main stylesheet from a blocking `<link>` to a preload/onload pattern. FCP improved. But CLS spiked badly.
+
+The problem: on visually dense marketing pages, content paints before styles arrive. Users see a flash of unstyled content that then jumps around as CSS loads. Lighthouse FCP looks better, but the actual user experience is worse.
+
+The fix was to inline the critical CSS at response time — preserving render stability while eliminating the network round-trip. CLS dropped to near-zero, and we kept the FCP gains.
+
+**Lesson:** Always validate CLS traces after CSS delivery changes, not just speed metrics. A faster paint that shifts content is worse than a slightly slower stable paint.
+
+## The Robots.txt Mystery
+
+Both sites had the same bizarre issue: our `robots.txt` files were valid in the repo, but Lighthouse flagged them as invalid in production.
+
+The culprit was Cloudflare's Bot Management feature. It was injecting a `Content-Signal` directive into the served `robots.txt` — a non-standard directive that Lighthouse rejects. This happened at the edge, silently, even though our origin files were correct.
+
+The fix required using Cloudflare's global-key API to disable managed robots injection while keeping AI bot blocking active. Once we handed robots control back to the origin, both sites passed clean.
+
+**Lesson:** Always validate responses from the public URL, not just your source files. CDN edge features can silently override what your origin serves.
+
+## Image Optimization: Context-Aware, Not Blanket
+
+For both sites, we generated responsive image variants sized to actual rendered dimensions:
+
+| Asset | Before | After |
+|-------|--------|-------|
+| arcs.health hero | 1 large JPG, all devices | 700w + 1000w WebP with JPG fallback |
+| arcs.health logo | 1 large PNG | 300w + 600w WebP with PNG fallback |
+| covenant.clinic hero | Unsized, single source | Explicit dimensions + 470w AVIF variant |
+
+Every image got explicit `width` and `height` attributes. This is cheap to add and eliminates layout shift warnings entirely.
+
+## Final Scores
+
+| Metric | [arcs.health](https://pagespeed.web.dev/analysis/https-arcs-health/6hq4pwrqtv?form_factor=mobile) | [covenant.clinic](https://pagespeed.web.dev/analysis/https-www-covenant-clinic/2htpxjq5zj?form_factor=mobile) |
+|--------|------------|----------------|
+| Performance | 100 | 100 |
+| Accessibility | 100 | 100 |
+| Best Practices | 100 | 96 |
+| SEO | 100 | 100 |
+| FCP | 0.8s | 0.8s |
+| LCP | 0.9s | 1.8s |
+| CLS | 0 | 0.011 |
+
+covenant.clinic's Best Practices deduction comes from third-party scripts (GTM, Clarity) — not something we control in first-party rendering.
+
+## What I Learned
+
+**Architecture before optimization.** Removing an unnecessary SPA bundle did more than any amount of script deferral or image compression. Fix the big structural problem first.
+
+**Faster isn't always better.** The non-blocking CSS experiment improved one metric while making the actual experience worse. Metrics serve users, not the other way around.
+
+**Trust but verify at the edge.** Your CDN is doing things to your responses that you didn't ask for. Always check what users actually receive, not what you think you're sending.
+
+**Cache purge is part of deployment.** After every content-path change, purge affected URLs. Otherwise you're measuring yesterday's site with today's expectations.
+
+**Accessibility is cheap.** Adding `aria-label`, `<main>` landmarks, and descriptive link text took minutes and moved Accessibility from mid-90s to 100.
+
+These aren't theoretical principles — they're the specific things that moved two real healthcare websites from "fine" to perfect scores. The playbook is reusable for any content-heavy site sitting behind a CDN.
