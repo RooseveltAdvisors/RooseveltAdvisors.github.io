@@ -32,7 +32,7 @@ The key architectural idea: agent memory lives in a `.GCC/` directory with `main
 [gcc-memory](https://github.com/RooseveltAdvisors/gcc-memory) is my open-source implementation. It's ~2,600 lines of Python, structured in four layers:
 
 ```
-src/onecontext/
+src/gcc_memory/
 ├── store.py       # 757 LOC — core storage engine
 ├── cli.py         # 447 LOC — Typer CLI (commit, branch, merge, context)
 ├── utils.py       # Atomic writes, file locks, timestamps
@@ -40,9 +40,9 @@ src/onecontext/
 └── adapters.py    # Codex/Claude/OpenCode transcript parsers
 
 integrations/claude/
-├── onecontext_observe.py   # UserPromptSubmit hook → observations
-├── onecontext_stop.py      # Stop hook → thoughts
-├── onecontext_sync.py      # PostToolUse hook → actions
+├── gcc_memory_observe.py   # UserPromptSubmit hook → observations
+├── gcc_memory_stop.py      # Stop hook → thoughts
+├── gcc_memory_sync.py      # PostToolUse hook → actions
 └── hook_common.py          # Shared: debounce, dynamic import, trimming
 
 scripts/
@@ -150,7 +150,7 @@ After the initial implementation, I ran a systematic comparison against the pape
 | main.md has milestones + to-do list | Only Purpose/Decisions/Questions | Added Milestones and To-Do sections |
 | Per-file responsibilities in metadata | Path list only | Documented as optional (paper says "manually added") |
 
-The git integration was the most significant gap. The paper says COMMIT "finalizes the memory and code changes as a Git commit, using the agent-authored summary as the commit message." Now `onecontext commit --git` does exactly that — staging all changes and creating a real git commit alongside the GCC commit.
+The git integration was the most significant gap. The paper says COMMIT "finalizes the memory and code changes as a Git commit, using the agent-authored summary as the commit message." Now `gcc-memory commit --git` does exactly that — staging all changes and creating a real git commit alongside the GCC commit.
 
 ## Lessons Learned
 
