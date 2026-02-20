@@ -27,9 +27,9 @@ The [GCC paper](https://arxiv.org/abs/2508.00031) (arXiv 2508.00031) introduces 
 
 The key architectural idea: agent memory lives in a `.GCC/` directory with `main.md` (global roadmap), and per-branch `commit.md` (milestone summaries), `log.md` (fine-grained OTA traces), and `metadata.yaml` (file structure, dependencies, configs). Agents equipped with GCC achieved 48% resolution on SWE-Bench-Lite — SOTA at the time, outperforming 26 competitive systems.
 
-## What I Built: OneContext
+## What I Built: gcc-memory
 
-[OneContext](https://github.com/RooseveltAdvisors/OneContext) is my open-source implementation. It's ~2,600 lines of Python, structured in four layers:
+[gcc-memory](https://github.com/RooseveltAdvisors/gcc-memory) is my open-source implementation. It's ~2,600 lines of Python, structured in four layers:
 
 ```
 src/onecontext/
@@ -164,11 +164,11 @@ The git integration was the most significant gap. The paper says COMMIT "finaliz
 
 ## Try It
 
-OneContext is open source: [github.com/RooseveltAdvisors/OneContext](https://github.com/RooseveltAdvisors/OneContext)
+gcc-memory is open source at [github.com/RooseveltAdvisors/gcc-memory](https://github.com/RooseveltAdvisors/gcc-memory)
 
 ```bash
-git clone https://github.com/RooseveltAdvisors/OneContext
-cd OneContext && bash install.sh
+git clone https://github.com/RooseveltAdvisors/gcc-memory
+cd gcc-memory && bash install.sh
 ```
 
 All credit for the GCC framework goes to [Junde Wu's paper](https://arxiv.org/abs/2508.00031). I just built an implementation and learned a lot along the way.
