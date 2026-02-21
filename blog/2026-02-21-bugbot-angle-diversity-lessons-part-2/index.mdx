@@ -1,0 +1,82 @@
+---
+slug: bugbot-angle-diversity-lessons-part-2
+title: "Why the Same Code Looks Different From Every Angle: BugBot Lessons Learned"
+authors: [jon]
+tags: [ai-agents, code-review, debugging, claude-code, developer-tools, testing]
+image: /img/blog/2026-02-21-bugbot-angle-diversity-lessons-part-2/hero-banner.jpg
+---
+
+After running BugBot across several real codebases, the result that surprised me most wasn't the bugs it found. It was *which* iteration found them. The same files, reviewed from a different angle in a later pass, surfaced issues that earlier agents had walked right past. The code hadn't changed. The angle had.
+
+This is Part 2 of the BugBot series. [Part 1](/blog/bugbot-adversarial-loop-part-1) covers the methodology and design. This post is about what I learned running it in practice.
+
+![BugBot Lessons Learned: Angle Diversity in Code Review](/img/blog/2026-02-21-bugbot-angle-diversity-lessons-part-2/hero-banner.jpg)
+
+{/* truncate */}
+
+## Fresh Context Is a Feature, Not a Bug
+
+The loop gives each iteration a completely fresh conversation context. There's no accumulated bias from what the previous iteration noticed. The state file tells the new iteration *what was found and what was tried* — but not *how the previous agent was thinking about it*.
+
+This turned out to matter. In one review, an agent running a "data round-trip" angle caught a normalization mismatch that an earlier "cross-feature interaction" agent had seen but dismissed as correct behavior. Same code, different frame, different conclusion.
+
+Human code reviewers do this intuitively — you come back to code with fresh eyes and see things you missed. BugBot automates that pattern. Every iteration is genuinely fresh.
+
+## Shuffled File Order Changes What Gets Noticed
+
+Each parallel agent reviews files in a different shuffled order. This came from Cursor BugBot's research on parallel review passes.
+
+The intuition: when you read `file_A` before `file_B`, you form hypotheses from `file_A` that you carry into reading `file_B`. Those hypotheses filter what you notice. Reverse the order and different hypotheses form first.
+
+In practice: an agent that read the frontend template first flagged a missing variable that a backend-first agent hadn't noticed — because the backend agent had formed a "this data is always present" assumption before it reached the template.
+
+It's a simple trick. The payoff is non-trivial.
+
+## Consensus Signals Are More Reliable Than Any Single Finding
+
+When two independent agents flag the same issue from different angles, BugBot auto-upgrades the confidence level:
+
+```
+C1 (Possible)  →  C2 (Probable)
+C2 (Probable)  →  C3 (Confirmed)
+```
+
+This matters because individual agent findings are noisy. One agent might flag a suspicious pattern that's actually fine. But when two agents — each reading files in different order, each focused on a different attack angle — both independently flag line 1142, that convergence is a much stronger signal than either agent alone.
+
+In one review, a "data integrity" agent and a "NULL/empty/missing" agent both flagged the same `json.loads()` call without seeing each other's output. The consensus upgrade bumped it from C2 to C3, moving the finding from MEDIUM priority to HIGH. It was real — `json.loads()` on stored data was returning a `dict` instead of a `list` and silently producing wrong output downstream.
+
+## The ALL_CLEAN Contract Is Strict For a Reason
+
+The completion criteria for BugBot is deliberately demanding:
+
+| Requirement | Rationale |
+|-------------|-----------|
+| Zero CRITICAL/HIGH findings | Production-blocking bugs must be fixed |
+| All 7 ODC triggers exercised | Ensures you've tested the *right kinds* of paths, not just many paths |
+| At least 15 attack angles completed | Coverage breadth across all seven angle categories |
+| All regression tests passing | Fixes don't introduce regressions |
+
+Early versions declared clean too quickly. The 7-trigger requirement came from realizing that "error recovery" and "configuration" paths almost never got reviewed in the first few passes. Those are exactly the paths that fail silently in production.
+
+The tool now won't stop until it has forced itself to think about what happens when the network is down, when a user has an unusual role, when data arrives in an unexpected format.
+
+## What Surprised Me
+
+**The most interesting bugs were in the interaction category.** Feature A writes a field. Feature B reads it. Feature B was written before Feature A existed and never updated its assumptions. Classic integration bug. BugBot's "adjacent feature mutation" angle surfaces exactly this — it asks: who *else* reads what you just wrote?
+
+**The mechanical pre-pass catches more than expected.** Running `ruff` and `black` before any LLM agent review consistently found trivial issues that would have burned agent context. Automate the automatable — it's real advice.
+
+**Evidence requirements eliminate noise.** The rule that every finding needs `file:line` + code snippet + trigger scenario dropped the false positive rate significantly. Agents that couldn't cite their evidence had to downgrade to C1 (Possible), which doesn't block shipping.
+
+**The state file is the whole system.** Between iterations, the state file is the only thing that persists. Everything else is disposable. This is a design principle worth generalizing: if your agent workflow's correctness depends on anything other than explicit, readable, persistent state, you have a fragile system.
+
+## Applying This to Any Code Review Process
+
+You don't need a tool to benefit from these ideas. The generalizable takeaways:
+
+- **Use angle diversity.** Don't do one pass trying to catch everything. Do separate focused passes: data integrity, security, error handling, cross-feature effects. Each pass has a specific mandate.
+- **Track trigger coverage, not just findings.** Ask yourself: have I tested what happens on error? On empty data? With different roles? The answer tells you what you've missed.
+- **Require evidence.** A suspicion without a code citation is not a finding — it's noise. Evidence requirements keep the review actionable.
+- **Iterate.** The second pass at a different angle will find things the first pass didn't. The third will find things the second didn't. Stop when a *complete* pass finds nothing new.
+
+The core insight is simple: code review completeness is about *which failure modes you tested*, not *how carefully you read the diff*. The diff is the same every time you look at it. The angle is what changes.

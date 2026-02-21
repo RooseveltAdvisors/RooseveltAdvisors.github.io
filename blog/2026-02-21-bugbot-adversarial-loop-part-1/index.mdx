@@ -1,0 +1,118 @@
+---
+slug: bugbot-adversarial-loop-part-1
+title: "I Built a Bug-Hunting Loop That Doesn't Quit: The BugBot Methodology"
+authors: [jon]
+tags: [ai-agents, code-review, debugging, claude-code, developer-tools, testing]
+image: /img/blog/2026-02-21-bugbot-adversarial-loop-part-1/hero-banner.jpg
+---
+
+Every code review I've ever done was a single pass. You open the diff, read through it, maybe catch a few things, leave some comments, approve. The problem is bugs don't care about your review flow. They hide in the interactions between features, at the edges of data types, in the paths that only fire under load. One pass at one angle misses them.
+
+I wanted to build something different — a code review tool that attacks the same codebase from every angle, iterates until it genuinely finds nothing new, and doesn't stop just because the first pass looked clean. I called it BugBot.
+
+![BugBot: Adversarial Iterative Code Review](/img/blog/2026-02-21-bugbot-adversarial-loop-part-1/hero-banner.jpg)
+
+{/* truncate */}
+
+## The Core Idea: Loop Until Clean
+
+BugBot is built around a simple premise: keep reviewing until a complete pass finds zero new CRITICAL or HIGH severity issues. Not "until you've looked at the diff once." Until you've exhausted every meaningful attack angle and the code genuinely holds up.
+
+Under the hood, it runs inside a persistent execution loop that spawns a fresh agent context each iteration, fed by a shared state file on disk. Each iteration picks a new set of attack angles, runs parallel review agents, fixes what it finds, then decides: keep going, or declare clean.
+
+```markdown
+# .claude/review-state.md (after iteration 2)
+
+## Trigger Coverage
+- [x] Simple path    → Iteration 1: angles 1, 5
+- [x] Complex path   → Iteration 1: angle 6
+- [x] Boundary       → Iteration 2: angle 22
+- [ ] Error recovery
+- [x] Stress/volume  → Iteration 2: angle 23
+- [x] Interaction    → Iteration 1: angles 1, 2, 3
+- [ ] Configuration
+```
+
+The state file is the only memory across iterations. The loop starts fresh each time, reads the file, picks untried angles, and continues.
+
+## Standing on the Shoulders of Giants
+
+I didn't invent any of this from scratch. BugBot is a synthesis of techniques from across the industry:
+
+| Source | Technique Borrowed |
+|--------|-------------------|
+| **Cursor BugBot** | Parallel passes with shuffled file ordering + majority voting for consensus |
+| **Meta ACH** | Fault-aware test generation — every fix gets a test that would have caught it |
+| **Trail of Bits** | Evidence-based findings with exact `file:line` citations — no hallucinated bugs |
+| **IBM ODC** | Trigger coverage tracking — completeness measured by which trigger categories are covered |
+| **HP Defect Origins** | Missing/Wrong/Unclear lens applied to every code element |
+| **CERT** | Severity × Likelihood × Remediation Cost prioritization |
+| **SmartBear/Cisco** | &lt;400 LOC per agent focus, &lt;60 minutes per pass |
+| **MAGIS (NeurIPS)** | Developer ↔ QA feedback loop — rejection feeds back as context for next attempt |
+| **Ellipsis** | Multi-stage filtering: confidence threshold → dedup → hallucination check |
+
+The insight from studying all these tools is that they each attack different failure modes. No single technique dominates — you need all of them.
+
+## Seven Triggers for Completeness
+
+One of the most useful frameworks I borrowed was IBM's Orthogonal Defect Classification — specifically the concept of ODC *triggers*. These are the conditions that cause bugs to manifest:
+
+| Trigger | Description |
+|---------|-------------|
+| **Simple path** | Happy path, normal inputs |
+| **Complex path** | Multi-step flows, conditional branches |
+| **Boundary** | Edge values, empty/null/max |
+| **Error recovery** | What happens when things fail? |
+| **Stress/volume** | High load, large data, rapid interaction |
+| **Interaction** | Cross-feature, cross-component effects |
+| **Configuration** | Different settings, roles, environments |
+
+BugBot won't declare ALL_CLEAN until all seven triggers have been exercised. This is the key difference from "we reviewed the diff." It's not about lines read — it's about which *failure modes* you've actually tested.
+
+## Confidence Scoring Every Finding
+
+Not all bugs are equal. Not all bug reports are equally credible. BugBot requires every finding to be scored on two axes before it gets acted on:
+
+| | C3 Confirmed | C2 Probable | C1 Possible |
+|---|---|---|---|
+| **S3 Critical** | CRITICAL — fix before merge | HIGH — fix before merge | MEDIUM |
+| **S2 Moderate** | HIGH — fix before merge | MEDIUM | LOW |
+| **S1 Minor** | MEDIUM | LOW | INFO |
+
+Only CRITICAL and HIGH findings block the ALL_CLEAN promise. This stops the tool from generating a wall of low-confidence noise and forcing you to fix speculative issues before shipping.
+
+The evidence requirement is strict: every finding needs an exact `file:line`, a code snippet, a trigger scenario, and a Missing/Wrong/Unclear classification. No handwavy "this might be a bug." Concrete or it's downgraded.
+
+## The Attack Angle Catalog
+
+Each iteration picks 4–5 *untried* angles from a catalog of 28. The catalog covers seven categories:
+
+- **Cross-feature interactions** — what other features read data this one writes?
+- **Data integrity** — round-trip consistency, NULL vs empty vs missing, type coercions
+- **Client-server contract** — response shape, validation mismatch, error path UX
+- **Security & safety** — XSS, authorization gaps, audit trail completeness
+- **Template & display** — missing variables, i18n, accessibility
+- **Edge cases & stress** — empty state, max capacity, concurrent editing
+- **Ecosystem impact** — search index, exports, API consumers
+
+Critically, agents review files in a *shuffled order* — different per agent. Borrowed from Cursor BugBot's research showing that reading order affects which patterns an agent notices first.
+
+## What a Typical Run Looks Like
+
+```
+Iteration 1: angles 1, 5, 6  →  2 HIGH bugs found  →  fix + regression tests  →  continue
+Iteration 2: angles 3, 9, 12 →  0 CRITICAL/HIGH    →  5/7 triggers covered   →  continue
+Iteration 3: angles 11, 14, 16 → 0 CRITICAL/HIGH   →  7/7 triggers covered   →  ALL_CLEAN
+```
+
+Three iterations. Two bugs fixed. Two regression tests written. The loop does the work.
+
+## What I Learned
+
+Building BugBot taught me that *completeness* is the hard problem in code review, not thoroughness on the happy path. Most reviews are thorough on the obvious path. They fall down at interaction effects, error handling, and configuration edge cases — exactly the places bugs hide in production.
+
+The ODC trigger framework gives you a way to know when you're *done*. Not "when you feel done" — when specific failure mode categories have been exercised. That's a meaningful standard.
+
+---
+
+*Part 2 covers what happened when I ran this in practice: why fresh context per iteration turned out to be a feature, how consensus signals emerged from independent agents, and the lessons I'd apply to any code review process — with or without a tool.*
