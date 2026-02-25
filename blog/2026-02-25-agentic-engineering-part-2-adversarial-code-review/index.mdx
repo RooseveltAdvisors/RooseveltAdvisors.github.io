@@ -1,0 +1,116 @@
+---
+slug: agentic-engineering-part-2-adversarial-code-review
+title: "Agentic Engineering, Part 2: Adversarial Code Review That Loops Until Clean"
+authors: [jon]
+tags: [agentic-engineering, claude-code, code-review, testing, ai-agents, series]
+image: /img/blog/2026-02-25-agentic-engineering-part-2-adversarial-code-review/hero-banner.jpg
+---
+
+Unit tests tell you if the code you wrote works. They don't tell you about the code you forgot to write. After shipping an alternate phone numbers feature that passed all 17 unit tests, a review agent found three bugs in under two minutes: `json.loads` could return a non-list, the primary phone wasn't normalized before comparison, and changing the primary phone left a stale `const` in the JavaScript. All three were cross-feature interaction bugs that happy-path tests couldn't catch because they don't know the adjacent features exist.
+
+That experience convinced me I needed something that attacks code the way a hostile codebase attacks a new feature. Not a linter. Not a static scan. An adversarial loop that picks different attack angles on every pass and doesn't stop until it runs out of things to find.
+
+I built BugBot.
+
+![Adversarial Code Review](/img/blog/2026-02-25-agentic-engineering-part-2-adversarial-code-review/hero-banner.jpg)
+
+{/* truncate */}
+
+## The Ralph Wiggum Loop
+
+BugBot is powered by a technique called the [Ralph Wiggum loop](https://github.com/AshKetchumFromPallet/ralph-wiggum) — a self-referential execution loop for AI agents. The agent gets the same prompt fed back to it on every iteration, but it sees its own previous work on disk through a state file. Each iteration has a fresh context window, so it can't get lazy or tunnel-visioned. It reads the state, picks new angles, attacks, updates the state, and either continues or declares clean.
+
+The loop terminates only on a specific promise: `ALL_CLEAN`. The agent can't fake it — the promise has strict criteria that must be genuinely true. If the agent lies, the next iteration reads the state file and finds unresolved issues.
+
+## What BugBot Does Per Iteration
+
+Each pass through the loop follows a precise sequence:
+
+| Step | Action |
+|------|--------|
+| **Mechanical pre-pass** | Run `ruff` and `black` on target files — catch trivial issues before wasting LLM tokens |
+| **Read state** | Load the state file to see which attack angles have been tried and which ODC triggers are covered |
+| **Pick angles** | Select 3-5 untried attack angles, prioritizing uncovered trigger categories |
+| **Spawn agents** | Launch parallel review agents, each with a specific attack angle and shuffled file ordering |
+| **Score findings** | Every bug gets Severity (S1-S3) x Confidence (C1-C3) scoring with mandatory file:line evidence |
+| **Fix and test** | CRITICAL and HIGH bugs get fixed immediately, with a regression test written for each |
+| **Update state** | Log findings, mark angles complete, update trigger coverage |
+
+The key detail: each agent receives the target files in a **different shuffled order**. This prevents agents from reasoning identically due to reading files in the same sequence. When two agents independently flag the same issue, confidence auto-upgrades — a majority voting mechanism borrowed from Cursor's BugBot.
+
+## The Attack Angle Catalog
+
+BugBot doesn't just "review code." It picks specific attack angles from a catalog of 28, organized into seven categories:
+
+| Category | Example Angles |
+|----------|---------------|
+| **Cross-feature interactions** | Adjacent feature mutation, shared endpoint callers, event cascade |
+| **Data integrity** | Round-trip consistency, NULL vs empty vs missing, type coercion boundaries |
+| **Client-server contract** | Response shape consistency, validation mismatch, optimistic UI race conditions |
+| **Security** | Input sanitization, authorization gaps, CSRF coverage, audit trail completeness |
+| **Template & display** | All render_template callers, i18n coverage, CSS conflicts |
+| **Edge cases** | Empty state, max capacity, rapid interaction, concurrent editing |
+| **Ecosystem impact** | Search indexer, export/dump, API consumers, kiosk/patient portal |
+
+Each category maps to one or more ODC (Orthogonal Defect Classification) triggers — a taxonomy from IBM that classifies how bugs manifest. The loop can't declare clean until all seven trigger types have at least one angle that tested them.
+
+## Confidence Scoring — Not All Bugs Are Equal
+
+Every finding goes through a two-axis scoring matrix:
+
+```
+Severity × Confidence = Priority
+
+  S3 (Critical) + C3 (Confirmed) = CRITICAL — fix before merge
+  S2 (Moderate) + C2 (Probable)  = MEDIUM  — fix recommended
+  S1 (Minor)    + C1 (Possible)  = INFO    — note only
+```
+
+Only CRITICAL and HIGH findings block the ALL_CLEAN promise. Every finding requires evidence: exact file and line number, the code snippet, a description of the issue, the Missing/Wrong/Unclear classification (from HP's defect taxonomy), and the ODC trigger category it exercises.
+
+Findings without file:line evidence are auto-downgraded to C1 (Possible). No hallucinated bugs.
+
+## A Real Run
+
+In a recent session reviewing CI/CD pipeline changes, BugBot ran 4 iterations:
+
+| Iteration | Angles | Findings | Action |
+|-----------|--------|----------|--------|
+| 1 | Injection paths, secret exposure, error recovery | 3 HIGH | Fixed hardcoded paths, added input validation |
+| 2 | Concurrent execution, rollback safety, config drift | 2 MEDIUM | Improved error handling in deploy scripts |
+| 3 | Permission escalation, stale state, network failure | 1 LOW | Logged for future work |
+| 4 | Remaining ODC triggers (boundary, stress) | 0 | ALL_CLEAN |
+
+Nine bugs found that I wouldn't have caught in manual review. The whole run took about 15 minutes.
+
+## What Makes This Different From a Linter
+
+Linters find syntactic problems. BugBot finds semantic problems — the kind where every line of code is technically valid but the feature doesn't work correctly because of how it interacts with the rest of the system. The Missing/Wrong/Unclear lens catches things like:
+
+- **Missing**: A write operation has no audit log entry (every other write does)
+- **Wrong**: Phone numbers compared in different formats (raw input vs normalized storage)
+- **Unclear**: A `const` in JavaScript that should be `let` because the value changes after a fetch
+
+These are the bugs that ship to production because they pass tests, pass linting, and look correct in a code review where you're reading one file at a time.
+
+## Composing With DevFlow
+
+BugBot plugs into the DevFlow pipeline from [Part 1](/blog/agentic-engineering-part-1-skills-that-ship-code). The typical workflow:
+
+1. Develop a feature on a branch
+2. Run `/PortalBugBot` before pushing
+3. BugBot loops until ALL_CLEAN, fixing bugs and writing tests along the way
+4. Push the now-cleaner code through CI
+5. Create PR with confidence
+
+The agent that wrote the code gets its work reviewed by a different instance of itself — one that's specifically trying to break it. The adversarial framing matters. A "review this code" prompt produces polite suggestions. A "find bugs using this specific attack angle" prompt produces findings with evidence.
+
+## What I Learned
+
+The biggest insight: **structured adversarial review finds more bugs than open-ended review.** Telling an agent "review this code" gets you generic observations. Giving it a specific attack angle, a severity scoring matrix, and an evidence requirement gets you actionable findings.
+
+The second insight: **the loop is essential.** A single-pass review, even a good one, misses things because the agent develops blind spots from its reasoning path. Fresh context on each iteration means fresh reasoning. The state file carries forward what was found; the agent's own biases don't.
+
+The third: **consensus voting works.** When two agents independently flag the same issue from different angles, it's almost certainly real. The auto-upgrade from C1 to C2, or C2 to C3, eliminates most false positives.
+
+Coming up: [Part 3](/blog/agentic-engineering-part-3-architectural-trace) covers ArchReview — deep architectural tracing that finds structural problems (duplicated logic, bypassed pipelines, monkey-patches) before they become bugs.

@@ -1,0 +1,159 @@
+---
+slug: agentic-engineering-part-4-the-full-stack
+title: "Agentic Engineering, Part 4: Nine Skills That Replaced My Dev Process"
+authors: [jon]
+tags: [agentic-engineering, claude-code, devops, testing, healthcare, ai-agents, series]
+image: /img/blog/2026-02-25-agentic-engineering-part-4-the-full-stack/hero-banner.jpg
+---
+
+Over the past three posts, I've covered the individual pieces: [DevFlow](/blog/agentic-engineering-part-1-skills-that-ship-code) for CI/CD enforcement, [BugBot](/blog/agentic-engineering-part-2-adversarial-code-review) for adversarial review, and [ArchReview](/blog/agentic-engineering-part-3-architectural-trace) for architectural tracing. But skills don't live in isolation. The real value comes from how they compose — nine skills that together replace what used to be a chaotic, manual, error-prone development process.
+
+This post maps the full lifecycle: how a feature goes from idea to production using nothing but skill invocations, and why the system keeps getting stricter over time.
+
+![The Full Stack](/img/blog/2026-02-25-agentic-engineering-part-4-the-full-stack/hero-banner.jpg)
+
+{/* truncate */}
+
+## The Nine Skills
+
+Every skill is prefixed with `Portal` — I type `/Portal` and see all of them via autocomplete. Each has a `SKILL.md` for routing, a `Workflows/` directory for execution steps, and optionally `Tools/` for helper scripts.
+
+| Skill | Role in Lifecycle | Invocation |
+|-------|------------------|------------|
+| **DevFlow** | Pipeline enforcer — checks stage, blocks deviations | `/PortalDevFlow` |
+| **BugBot** | Adversarial review loop — attacks until ALL_CLEAN | `/PortalBugBot` |
+| **CodeReview** | Broad anti-pattern scan — 12 categories | `/PortalCodeReview` |
+| **ArchReview** | Deep feature trace — audit + design solution | `/PortalArchReview` |
+| **E2E** | End-to-end test orchestration — 30+ scenarios | `/PortalE2E` |
+| **DeployDelta** | Pre-deploy diff — devbox vs prodbox comparison | `/PortalDeployDelta` |
+| **CleanupTestData** | Reset test state — remove synthetic patient records | `/PortalCleanupTestData` |
+| **Access** | Role-based portal login — front desk, MA, provider, manager | `/PortalAccess` |
+| **BlogFromVault** | Documentation — turn recent work into blog posts | `/PortalBlogFromVault` |
+
+## A Feature's Journey
+
+Here's the actual sequence for shipping a feature, using the lunch break scheduling feature as a concrete example:
+
+### Phase 1: Understand
+
+```
+/PortalArchReview audit the scheduling pipeline
+```
+
+Before writing a line of code, ArchReview traces every code path through the scheduling system. Five parallel agents map entry points, find duplicated logic, trace data flow, check transaction safety, and verify i18n completeness. The output tells me exactly which functions I need to modify and which ones I need to be careful not to break.
+
+### Phase 2: Develop
+
+```
+/PortalDevFlow
+```
+
+DevFlow detects I'm on master and tells me to branch. I create `feature/lunch-break`, build the feature, and invoke DevFlow again periodically. It tracks my progress: uncommitted changes → committed → pushed → CI running.
+
+### Phase 3: Review
+
+```
+/PortalBugBot
+```
+
+BugBot launches the adversarial loop against my changes. It finds that the lunch break banner works on `/flow` but crashes `/welcome` — both routes render the same template, but only one passes the `lunch_break` variable. BugBot fixes it, writes a regression test, and continues looping until clean.
+
+### Phase 4: Test
+
+```
+/PortalCleanupTestData
+/PortalE2E lunch-break
+```
+
+First, clean up any test data from previous runs. Then run the end-to-end scenario — 42 unit tests plus browser automation that walks through admin config, booking slot blocking, kiosk banners in both English and Spanish, lobby TV display, and wait time calculations.
+
+### Phase 5: Deploy
+
+```
+/PortalDevFlow
+```
+
+DevFlow sees CI passed, no PR exists. It tells me to create one. After merge, it confirms auto-deploy triggered. If I want extra confidence, I run DeployDelta first:
+
+```
+/PortalDeployDelta
+```
+
+This SSHes into prodbox (read-only), compares git state, environment variables, nginx config, database migrations, dependencies, and JS bundles against what's on the branch. Produces a concrete checklist of what will change.
+
+### Phase 6: Document
+
+```
+/PortalBlogFromVault
+```
+
+Analyzes the git commits, reads the source code, and generates a blog post about the work. The post you're reading right now was generated this way.
+
+## The Skill Anatomy
+
+Every skill follows the same structure:
+
+```
+PortalSkillName/
+├── SKILL.md              # Routing: name, triggers, workflow table
+├── Workflows/
+│   ├── MainWorkflow.md   # Step-by-step execution instructions
+│   └── AltWorkflow.md    # Alternative workflow for different triggers
+├── Tools/                # Optional helper scripts
+└── Examples.md           # Optional worked examples
+```
+
+The `SKILL.md` frontmatter includes a `description` field with `USE WHEN` triggers — these tell the agent when to suggest the skill:
+
+```yaml
+description: Adversarial iterative code review that loops until clean.
+  USE WHEN user says "bugbot", "deep review", "adversarial review",
+  "find all bugs", "review until clean"
+```
+
+Workflows are markdown files with numbered steps, bash commands, decision trees, and explicit guardrails. The agent reads the workflow at invocation time and follows it mechanically. The structure handles the process; the agent's intelligence handles the details.
+
+## How the System Gets Stricter
+
+Every bug that ships teaches the system something:
+
+| Bug Shipped | Skill Updated | Rule Added |
+|-------------|---------------|------------|
+| Visit-reason note missing from 4 of 5 callers | ArchReview | "Count ALL callers before fixing a missing side effect" |
+| Phone numbers compared in different formats | BugBot | Attack angle: "Round-trip consistency across normalization boundaries" |
+| Template variable missing on sibling route | ArchReview | "Compare render_template kwargs across ALL callers" |
+| Bare `commit()` causing database locks under load | CodeReview + ArchReview | Transaction safety audit agent |
+| `datetime.now()` instead of `utc_now_iso()` | CodeReview | Timezone/date anti-pattern scanner |
+| Lunch break banner crash on `/welcome` | BugBot + E2E | Template variable completeness + 42-test E2E scenario |
+
+The skills are a living codebase of operational knowledge. Each lesson learned becomes a rule, an attack angle, or a test scenario. The system gets stricter not because I'm adding arbitrary constraints, but because each constraint represents a real bug that actually shipped.
+
+## E2E: 30+ Scenarios and Growing
+
+The E2E skill deserves special mention because of its scale. It has over 30 test scenarios covering the full patient journey:
+
+| Category | Scenarios |
+|----------|-----------|
+| **Kiosk** | Registration, family batch check-in, demographics edge cases, patient matching, session isolation |
+| **Booking** | Online booking, booking page UI, Stripe virtual care payment |
+| **Clinical** | Queue workflow, form fill forward, lab results, signature workflow |
+| **Infrastructure** | Multi-tenant security (104 curl tests), SMS/SSE scalability (17 checks), video call integration |
+| **Telehealth** | Virtual visit workflow, post-visit survey |
+
+Each scenario has a markdown spec with preconditions, step-by-step actions, expected results, and cleanup instructions. The agent reads the spec and executes it with browser automation (`agent-browser`), API calls (`curl`), and database queries. No manual clicking through UIs.
+
+## What This Costs
+
+The honest answer: building nine skills took weeks of iteration. Each skill started simple and grew as bugs taught new lessons. The BugBot workflow alone is 462 lines of markdown with a 28-angle attack catalog.
+
+But the return is compounding. Every new feature I build benefits from every lesson every previous feature taught. The lunch break feature had fewer bugs than the alternate phones feature, which had fewer than the feature before that. The skills accumulate knowledge faster than I accumulate technical debt.
+
+## The Principle
+
+If I had to distill the entire series into one sentence:
+
+**Don't make AI agents smarter — make them constrained, adversarial, and self-improving.**
+
+A smart agent with no constraints is a liability. A constrained agent that follows structured workflows, attacks its own output, and encodes every failure as a new rule is an engineering system. The skills are the system. The agent is just the execution engine.
+
+This series will continue as the skill set grows. Every new feature, every new class of bug, every new deployment pattern becomes a new skill or a new rule in an existing one. The system gets stricter. The code gets more reliable. And I sleep better when the agent is shipping code at 2 AM.
