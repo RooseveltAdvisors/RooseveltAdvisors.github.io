@@ -1,0 +1,104 @@
+---
+slug: context-files-making-agents-worse
+title: "Your CLAUDE.md Is Probably Making Your Agent Worse"
+authors: [jon]
+tags: [ai, developer-tools, context-engineering, claude-code, agents]
+image: /img/blog/2025-02-25-context-files-making-agents-worse/hero-banner.jpg
+---
+
+I had a 2,000-word CLAUDE.md in one of my repos. It covered architecture, directory structure, coding conventions, style rules — the works. Every time I ran Claude Code or Codex against the codebase, I assumed that big context file was helping. More context, better results, right?
+
+Then I read a paper that said otherwise. Not just "diminishing returns" — actively worse performance. My carefully written instructions were making my agent slower, more expensive, and less effective at solving actual problems.
+
+![Context file optimization](/img/blog/2025-02-25-context-files-making-agents-worse/hero-banner.jpg)
+
+{/* truncate */}
+
+## The Paper That Changed My Mind
+
+"Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?" ([Gloaguen et al., ICML 2025](https://arxiv.org/abs/2602.11988)) tested this rigorously. Researchers from ETH Zurich evaluated Claude Code, Codex, and Qwen Code across hundreds of real GitHub issues — both on the established SWE-bench benchmark and a new benchmark they built from repositories with developer-committed context files.
+
+The headline finding is counterintuitive: **LLM-generated context files reduce task success rates by ~3% while increasing inference cost by over 20%.** Even developer-written files only improved success by ~4% on average — barely above the noise — while still adding 20%+ to the bill.
+
+| Metric | No Context | LLM-Generated | Developer-Written |
+|---|---|---|---|
+| Success rate (delta) | baseline | -3% | +4% |
+| Cost increase | baseline | +20-23% | +19% |
+| Extra steps per task | baseline | +4-6 | +4-5 |
+| GPT-5.2 reasoning tokens | baseline | +22% | +20% |
+
+The behavioral analysis is what really got me. Context files cause agents to run more tests, grep more files, read more files, and write more files. Agents dutifully follow the instructions you give them — which sounds good until you realize that following unnecessary instructions is just busywork that burns tokens without improving outcomes.
+
+## Why Overviews Don't Work
+
+The most surprising finding: **codebase overviews don't help agents find relevant files faster.** Eight out of twelve developer-written files included overviews. Over 90% of LLM-generated files did. But when the researchers measured how many steps it took agents to first interact with a file from the actual fix, there was no meaningful difference.
+
+Agents are already good at exploring codebases. They grep, they read directory listings, they follow imports. A section that says "the API routes are in `src/routes/`" doesn't help because the agent would have found that in one `ls` command anyway. Meanwhile, it consumed tokens and added cognitive overhead to every prompt.
+
+## What Actually Helps
+
+The paper did find one mechanism through which context files genuinely help: **surfacing non-standard tooling.** When a context file mentions `uv`, agents use it 1.6 times per task on average versus fewer than 0.01 times when it's not mentioned. Same for repository-specific tools — 2.5 uses per task when mentioned, 0.05 when not.
+
+This makes sense. An agent can discover your project structure by reading code. It cannot discover that you use `bun` instead of `npm` from a `package.json` that lists both as valid. It cannot discover that `make proto` must run before `cargo build` unless something tells it.
+
+## The 4-Question Filter
+
+Based on the paper's findings, I built a tool called [ContextOptimizer](https://github.com/jonroosevelt) that applies a simple inclusion filter to every line in a context file:
+
+```
+Include a line if and only if:
+1. NOT DISCOVERABLE — agent can't learn this from README, configs, or --help
+2. ACTIONABLE — it tells the agent to DO something specific
+3. PREVENTS SILENT FAILURE — getting it wrong causes hard-to-debug issues
+4. BROADLY APPLICABLE — relevant to most tasks, not just one workflow
+```
+
+Everything that fails any of these four questions gets cut. The tool has three workflows: **Audit** (score existing files against 8 weighted anti-patterns), **Optimize** (rewrite files using the filter), and **Generate** (create minimal files from scratch for repos that don't have one yet).
+
+## The Anti-Pattern Scoring System
+
+The Audit workflow assigns a "bloat score" from 0-100 based on detected anti-patterns:
+
+| Anti-Pattern | Weight | Why It Hurts |
+|---|---|---|
+| Codebase overview | +20 | Proven ineffective at helping navigation |
+| Redundant with README/configs | +15 | Wastes tokens on discoverable info |
+| Generic boilerplate | +15 | "Write clean code" applies to every repo |
+| Linter-enforced style rules | +10 | Already handled by tooling |
+| Architecture descriptions | +10 | Agents discover this by reading code |
+| Non-actionable statements | +10 | Agent can't act on "designed for scale" |
+| Over 500 words | +10 | Longer files = more cost, not more success |
+| Marketing language | +10 | "Best-in-class" helps nobody |
+
+A score of 0 means perfectly minimal. Most files I've audited land between 40-70.
+
+## What a Good Context File Looks Like
+
+After optimization, most context files shrink dramatically. Here's the structure I recommend:
+
+```markdown
+# Project Name
+
+## Critical Constraints
+Use bun, never npm or yarn.
+Never import from @internal/* in test files — causes silent CI failures.
+
+## Testing
+Run `bun test --bail -- src/` for unit tests.
+Integration tests require REDIS_URL env var.
+
+## Conventions
+API routes use kebab-case: /api/user-profiles, not /api/userProfiles.
+```
+
+That's it. Under 300 words. No overview, no architecture, no style guide that your linter already enforces. Every line passes the 4-question filter.
+
+## What I Learned
+
+**Less is more, and the data proves it.** Every line in your context file costs tokens *and* compliance overhead. The paper measured this directly — agents spend more reasoning tokens when context files are present, not because they're solving harder problems, but because they're working harder to follow your instructions.
+
+**The 4-question filter is universally applicable.** Whether you're writing CLAUDE.md, AGENTS.md, .cursorrules, or any other agent context file, the same principle holds: only include what can't be discovered, what's actionable, what prevents silent failure, and what applies broadly.
+
+**If your README already says it, your CLAUDE.md shouldn't.** The paper showed that LLM-generated context files are highly redundant with existing documentation. They only become helpful when all other docs are removed — which is never the case in a real repository. Stop duplicating information across files.
+
+The full paper is available at [arxiv.org/abs/2602.11988](https://arxiv.org/abs/2602.11988). I'd recommend reading it if you maintain context files in any of your repositories. The ContextOptimizer tool is available as a Claude Code skill — just say "audit my CLAUDE.md" and it'll tell you exactly what to cut.
