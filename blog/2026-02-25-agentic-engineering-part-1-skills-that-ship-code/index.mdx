@@ -1,0 +1,120 @@
+---
+slug: agentic-engineering-part-1-skills-that-ship-code
+title: "Agentic Engineering, Part 1: Building Skills That Ship Code for You"
+authors: [jon]
+tags: [agentic-engineering, claude-code, ci-cd, devops, ai-agents, skills, series]
+image: /img/blog/2026-02-25-agentic-engineering-part-1-skills-that-ship-code/hero-banner.jpg
+---
+
+Three months ago, I was letting my AI agent write code directly on the production server. No branches, no CI, no tests between "idea" and "live in production." If the agent broke something at 2 AM, I'd find out when patients couldn't book appointments in the morning. I'm not proud of it, but that's where most people start with AI coding agents — the default mode is a very capable intern with root access and no guardrails.
+
+Today, my agent follows a strict pipeline: branch, develop, push, CI, PR, merge, auto-deploy. It can't skip steps. It can't edit production. It runs its own adversarial code reviews before I even look at the PR. And the whole thing is orchestrated by a set of reusable skills I built inside the project.
+
+This is Part 1 of a series on **agentic engineering** — the practice of building systems that make AI agents reliable enough to trust with real infrastructure. Not prompt engineering. Not vibe coding. Engineering.
+
+![Agentic Engineering: Skills That Ship Code](/img/blog/2026-02-25-agentic-engineering-part-1-skills-that-ship-code/hero-banner.jpg)
+
+{/* truncate */}
+
+## The Problem: Agents Don't Know When to Stop
+
+AI coding agents are remarkably good at writing code. They're terrible at knowing what happens after. An agent will happily implement a feature, format it, and declare victory — while the code sits on whatever branch (or no branch) it happened to land on. The gap between "code written" and "code safely in production" is entirely your problem.
+
+I run a healthcare portal — patient registration, scheduling, telehealth, insurance OCR. When a bug ships, real people can't see their doctor. So I needed more than "be careful" — I needed a system.
+
+## The Solution: Project-Level Skills as Guardrails
+
+Claude Code has a concept called **skills** — markdown files that define reusable workflows the agent follows when invoked. They're not prompts. They're structured instructions with decision trees, parallel execution steps, and explicit guardrails. Think of them as runbooks the agent reads and executes.
+
+I built nine project-level skills, all prefixed with `Portal` so I can type `/Portal` and see them all:
+
+| Skill | What It Does |
+|-------|-------------|
+| `/PortalDevFlow` | CI/CD stage detector and enforcer |
+| `/PortalBugBot` | Adversarial code review that loops until clean |
+| `/PortalCodeReview` | Static pattern scan for anti-patterns |
+| `/PortalArchReview` | Deep architectural trace of a single feature |
+| `/PortalE2E` | End-to-end test orchestration |
+| `/PortalDeployDelta` | Diff devbox vs prodbox before deploying |
+| `/PortalCleanupTestData` | Reset test patient data between runs |
+| `/PortalBlogFromVault` | Turn recent work into blog posts (meta!) |
+| `/PortalAccess` | Role-based portal login for testing |
+
+Each skill has a `SKILL.md` (routing and triggers), a `Workflows/` directory (step-by-step execution), and optionally `Tools/` (helper scripts). The agent reads the workflow at invocation time and follows it mechanically.
+
+## DevFlow: The Agent Can't Skip Steps
+
+The skill that changed everything was `/PortalDevFlow`. When invoked, it runs eight diagnostic commands in parallel — current branch, working tree status, ahead/behind remote, open PRs, CI status, hostname — and classifies you into exactly one stage:
+
+```
+## DevFlow: PUSHED
+
+**Branch:** `feature/insurance-ocr`
+**Working tree:** clean
+**Remote:** up to date
+**CI:** passing
+**PR:** none
+
+### Next Step
+gh pr create --base master --title "Feature: ..." --body "..."
+
+### Pipeline Progress
+[x] Branch from master
+[x] Develop & commit
+[x] Push to remote
+[x] CI passes
+[ ] Create PR            <-- YOU ARE HERE
+[ ] Merge to master
+[ ] Auto-deploy to prod
+```
+
+More importantly, it detects **deviations**. If you're editing files on master, it tells you to stash and branch. If it detects you're on the production server, it refuses to proceed. These aren't suggestions — the agent treats them as hard rules because the skill workflow says so explicitly.
+
+The first time I ran it after building it, it caught me: "DEVIATION: You have uncommitted changes on master." It then walked me through creating a feature branch, committing, pushing, waiting for CI, creating a PR, merging, and watching the auto-deploy. The full pipeline, enforced by the agent, for the first time.
+
+## BugBot: The Agent Reviews Its Own Code
+
+The second breakthrough was `/PortalBugBot`. It uses a technique called the [Ralph Wiggum loop](https://github.com/AshKetchumFromPallet/ralph-wiggum) — a self-referential execution loop where the agent gets the same prompt fed back to it on every iteration, but sees its previous work on disk.
+
+Each iteration, BugBot:
+1. Reads a state file tracking what it's already found
+2. Picks 3-5 untried attack angles (race conditions, timezone bugs, SQL injection, stale state)
+3. Spawns parallel review agents, each hunting for specific bug categories
+4. Fixes any CRITICAL or HIGH findings and writes regression tests
+5. Updates the state file
+
+The loop terminates only when a full pass of 3+ agents finds zero critical issues, all seven ODC (Orthogonal Defect Classification) triggers are covered, and all tests pass. It typically runs 3-6 iterations.
+
+In the last run, BugBot found 9 bugs across a marketing analytics feature — things like unescaped SQL parameters, missing null checks on API responses, and a timezone conversion that silently dropped DST offsets. I wouldn't have caught most of those in manual review.
+
+## What Actually Changed
+
+The concrete difference:
+
+| Before | After |
+|--------|-------|
+| Edit on prodbox directly | Feature branches with auto-deploy |
+| No CI | Lint, format, test, security scan on every push |
+| Manual "looks good" review | Adversarial multi-agent review loops |
+| `rsync` to deploy | `git push` triggers GitHub Actions |
+| Rollback = "hope you remember what changed" | Automatic rollback on health check failure |
+| "Did I break something?" | Agent detects deviations before they happen |
+
+The agent that broke production at 2 AM is the same agent that now refuses to touch production without going through the pipeline.
+
+## The Key Insight
+
+Skills aren't about making the agent smarter. They're about making it **constrained**. An unconstrained agent with GPT-4 or Claude-level capability is dangerous precisely because it can do anything — including the wrong thing, confidently. Skills give the agent a decision tree that routes it toward correct behavior regardless of how creative its reasoning gets.
+
+The pattern is simple: define the workflow as a markdown file, put hard rules in a guardrails section, and let the agent read and execute it mechanically. The agent's intelligence handles the details; the skill structure handles the process.
+
+## What's Next
+
+This is Part 1. In upcoming posts, I'll cover:
+- **Part 2: BugBot Deep Dive** — how adversarial loops with confidence scoring catch bugs that unit tests miss
+- **Part 3: ArchReview** — tracing every code path through a feature to find structural problems
+- **Part 4: The Full Stack** — how all nine skills compose into a development lifecycle
+
+The skills are evolving as I use them. Every time the agent does something wrong, I add a guardrail. Every time I do something manually that should be automated, I build a skill. The system gets stricter over time, which is exactly the point.
+
+If you're using AI coding agents and shipping code without a pipeline like this, you're where I was three months ago. It works until it doesn't. The investment in building these skills pays for itself the first time the agent catches a deviation you would have missed at midnight.
