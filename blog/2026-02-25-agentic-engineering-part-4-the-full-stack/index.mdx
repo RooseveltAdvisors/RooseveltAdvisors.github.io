@@ -26,7 +26,7 @@ Every skill is prefixed with `Portal` — I type `/Portal` and see all of them v
 | **ArchReview** | Deep feature trace — audit + design solution | `/PortalArchReview` |
 | **E2E** | End-to-end test orchestration — 30+ scenarios | `/PortalE2E` |
 | **DeployDelta** | Pre-deploy diff — devbox vs prodbox comparison | `/PortalDeployDelta` |
-| **CleanupTestData** | Reset test state — remove synthetic patient records | `/PortalCleanupTestData` |
+| **CleanupTestData** | Reset test state — remove synthetic test records | `/PortalCleanupTestData` |
 | **Access** | Role-based portal login — front desk, MA, provider, manager | `/PortalAccess` |
 | **BlogFromVault** | Documentation — turn recent work into blog posts | `/PortalBlogFromVault` |
 
@@ -65,7 +65,7 @@ BugBot launches the adversarial loop against my changes. It finds that the lunch
 /PortalE2E lunch-break
 ```
 
-First, clean up any test data from previous runs. Then run the end-to-end scenario — 42 unit tests plus browser automation that walks through admin config, booking slot blocking, kiosk banners in both English and Spanish, lobby TV display, and wait time calculations.
+First, clean up any test data from previous runs. Then run the end-to-end scenario — 42 unit tests plus browser automation that walks through admin config, scheduling rules, multi-language UI banners, display screens, and time calculations.
 
 ### Phase 5: Deploy
 
@@ -130,15 +130,15 @@ The skills are a living codebase of operational knowledge. Each lesson learned b
 
 ## E2E: 30+ Scenarios and Growing
 
-The E2E skill deserves special mention because of its scale. It has over 30 test scenarios covering the full patient journey:
+The E2E skill deserves special mention because of its scale. It has over 30 test scenarios covering the full user journey:
 
 | Category | Scenarios |
 |----------|-----------|
-| **Kiosk** | Registration, family batch check-in, demographics edge cases, patient matching, session isolation |
-| **Booking** | Online booking, booking page UI, Stripe virtual care payment |
-| **Clinical** | Queue workflow, form fill forward, lab results, signature workflow |
+| **Self-service** | Registration, batch check-in, demographics edge cases, record matching, session isolation |
+| **Booking** | Online booking, booking page UI, Stripe payment integration |
+| **Workflows** | Queue management, form fill forward, document processing, signature workflow |
 | **Infrastructure** | Multi-tenant security (104 curl tests), SMS/SSE scalability (17 checks), video call integration |
-| **Telehealth** | Virtual visit workflow, post-visit survey |
+| **Video** | Virtual visit workflow, post-visit survey |
 
 Each scenario has a markdown spec with preconditions, step-by-step actions, expected results, and cleanup instructions. The agent reads the spec and executes it with browser automation (`agent-browser`), API calls (`curl`), and database queries. No manual clicking through UIs.
 

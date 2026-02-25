@@ -69,8 +69,8 @@ ArchReview's Transaction Safety agent traces every database write in the feature
 ```
 | Write Location          | Service           | Uses transaction()? | Risk                       |
 |-------------------------|-------------------|---------------------|----------------------------|
-| clinical_service.py:89  | ClinicalService   | Yes                 | None                       |
-| patient_db.py:340       | PatientDatabase   | No — bare commit()  | P0: concurrent lock failure |
+| data_service.py:89    | DataService   | Yes                 | None                       |
+| app_db.py:340          | AppDatabase   | No — bare commit()  | P0: concurrent lock failure |
 ```
 
 This is architectural, not syntactic. A linter can't tell you that `bare commit()` is dangerous specifically because of how SQLite handles lock upgrades under concurrency. The agent understands the architectural context because the workflow explains it.

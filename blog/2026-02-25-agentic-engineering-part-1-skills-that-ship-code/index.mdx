@@ -6,7 +6,7 @@ tags: [agentic-engineering, claude-code, ci-cd, devops, ai-agents, skills, serie
 image: /img/blog/2026-02-25-agentic-engineering-part-1-skills-that-ship-code/hero-banner.jpg
 ---
 
-Three months ago, I was letting my AI agent write code directly on the production server. No branches, no CI, no tests between "idea" and "live in production." If the agent broke something at 2 AM, I'd find out when patients couldn't book appointments in the morning. I'm not proud of it, but that's where most people start with AI coding agents — the default mode is a very capable intern with root access and no guardrails.
+Three months ago, I was letting my AI agent write code directly on the production server. No branches, no CI, no tests between "idea" and "live in production." If the agent broke something at 2 AM, the service would be down until I noticed. I'm not proud of it, but that's where most people start with AI coding agents — the default mode is a very capable intern with root access and no guardrails.
 
 Today, my agent follows a strict pipeline: branch, develop, push, CI, PR, merge, auto-deploy. It can't skip steps. It can't edit production. It runs its own adversarial code reviews before I even look at the PR. And the whole thing is orchestrated by a set of reusable skills I built inside the project.
 
@@ -20,7 +20,7 @@ This is Part 1 of a series on **agentic engineering** — the practice of buildi
 
 AI coding agents are remarkably good at writing code. They're terrible at knowing what happens after. An agent will happily implement a feature, format it, and declare victory — while the code sits on whatever branch (or no branch) it happened to land on. The gap between "code written" and "code safely in production" is entirely your problem.
 
-I run a healthcare portal — patient registration, scheduling, telehealth, insurance OCR. When a bug ships, real people can't see their doctor. So I needed more than "be careful" — I needed a system.
+I run a production web application with real users depending on it around the clock. When a bug ships, the service goes down. So I needed more than "be careful" — I needed a system.
 
 ## The Solution: Project-Level Skills as Guardrails
 
@@ -36,7 +36,7 @@ I built nine project-level skills, all prefixed with `Portal` so I can type `/Po
 | `/PortalArchReview` | Deep architectural trace of a single feature |
 | `/PortalE2E` | End-to-end test orchestration |
 | `/PortalDeployDelta` | Diff devbox vs prodbox before deploying |
-| `/PortalCleanupTestData` | Reset test patient data between runs |
+| `/PortalCleanupTestData` | Reset test data between runs |
 | `/PortalBlogFromVault` | Turn recent work into blog posts (meta!) |
 | `/PortalAccess` | Role-based portal login for testing |
 
@@ -49,7 +49,7 @@ The skill that changed everything was `/PortalDevFlow`. When invoked, it runs ei
 ```
 ## DevFlow: PUSHED
 
-**Branch:** `feature/insurance-ocr`
+**Branch:** `feature/document-ocr`
 **Working tree:** clean
 **Remote:** up to date
 **CI:** passing
