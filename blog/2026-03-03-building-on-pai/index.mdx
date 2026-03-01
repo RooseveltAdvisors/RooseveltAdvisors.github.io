@@ -1,0 +1,100 @@
+---
+slug: building-on-pai
+title: "Building on Giants: How Daniel Miessler's PAI Became My Foundation"
+authors: [jon]
+tags: [claude-code, ai, pai, open-source, architecture, personal-ai]
+image: /img/blog/2026-03-03-building-on-pai/hero-banner.jpg
+---
+
+I'd been building my AI infrastructure for months before I found a name for it. I had a CLAUDE.md with operating modes, a folder of skills, a deploy script that pushed everything to multiple machines. I thought I was solving my own problems. Then I came across [Daniel Miessler's Personal AI Infrastructure (PAI)](https://github.com/danielmiessler/Personal_AI_Infrastructure) and realized I'd been independently converging on the same idea — just without the framework.
+
+PAI gave me the vocabulary: operating modes (NATIVE/ALGORITHM), a skill system designed for repeatability, memory structures, and an opinionated way to configure Claude Code as a persistent AI environment rather than a per-session tool. My infrastructure had all of these — they were just scattered and inconsistent. PAI organized them.
+
+This post is about what I built on top of PAI, why open-sourcing it matters, and how the whole system fits together.
+
+![A layered diagram showing PAI as the foundation, with deployment infrastructure and agent stack stacked on top](/img/blog/2026-03-03-building-on-pai/hero-banner.jpg)
+
+{/* truncate */}
+
+## What PAI Gives You
+
+PAI is a framework for configuring Claude Code as a personal AI operating system. The core ideas:
+
+- **Operating modes** — Every response uses NATIVE (quick tasks), ALGORITHM (complex multi-step work), or MINIMAL (acknowledgments). This enforces consistent output structure and prevents the AI from over-engineering simple requests.
+- **Skill system** — User-level skills live in `~/.claude/skills/` and load in every project. Skills are markdown documents that extend Claude's capabilities — not scripts, just structured context.
+- **Memory** — GCC-style memory (COMMIT, BRANCH, MERGE, CONTEXT) lets the AI persist reasoning across sessions without polluting the project codebase.
+- **Algorithm v3.5** — A 7-phase structured execution loop (OBSERVE → THINK → PLAN → BUILD → EXECUTE → VERIFY → LEARN) that turns complex tasks into trackable, verifiable work.
+
+What PAI doesn't give you: a way to manage this configuration across multiple machines, version it in git, or deploy it automatically when you push changes.
+
+That's the gap I filled.
+
+## What I Added: The Deployment Layer
+
+The [pai-claude-config](https://github.com/RooseveltAdvisors/pai-claude-config) repo is PAI plus three things:
+
+| Layer | What it does |
+|-------|-------------|
+| **Git versioning** | All config in one repo — skills, hooks, agents, CLAUDE.md |
+| **deploy.sh** | Rsync to local and remote machines on demand |
+| **GitHub Actions CI** | Push to `main` → runners on each remote machine auto-deploy |
+
+The deploy mechanism is intentionally simple. `deploy.sh` is ~90 lines of bash. It rsyncs skills, hooks, agents, and CLAUDE.md to `~/.claude` on whichever machines you target. Remote machines run self-hosted GitHub Actions runners that trigger on every push to `main`. Local machine runs `./deploy.sh local` manually.
+
+The result: every machine gets the same skills, the same hooks, the same CLAUDE.md — always in sync with what's in git. If a skill breaks something, `git revert` fixes all machines.
+
+## What I Added: The 4-Layer Agent Stack
+
+Beyond deployment, the config includes an opinionated architecture for building reusable automation — the four-layer model I wrote about [in the previous post](https://jonroosevelt.com/blog/agent-stack-layers):
+
+```
+Skills       — raw capability (playwright-bowser, BugBot methodology)
+Agents       — specialized workflows that use skills (bowser-qa-agent)
+Commands     — orchestration that coordinates agents (ui-review, DevFlow)
+Justfile     — reusability entry point (just ui-review, just bugbot)
+```
+
+PAI defines the skill layer. The four-layer model fills in the rest. The deployment system makes it consistent across machines.
+
+## The Synthesis
+
+Here's what the full stack looks like:
+
+| Component | Source | What it provides |
+|-----------|--------|-----------------|
+| NATIVE/ALGORITHM modes | Daniel Miessler's PAI | Consistent response structure |
+| Skill system design | Daniel Miessler's PAI | User-level skills that load everywhere |
+| Algorithm v3.5 | Daniel Miessler's PAI | 7-phase structured execution |
+| Skills → Agents → Commands model | [Indie DevDan](https://www.youtube.com/watch?v=efctPj6bjCY) | Composable automation architecture |
+| deploy.sh + GitHub Actions CI | This repo | Multi-machine consistency via git |
+| 27 custom skills | This repo | BugBot, DevFlow, BlogWriter, etc. |
+
+Neither PAI nor the 4-layer model alone gets you to what I have. PAI gives the brain. The 4-layer model gives the muscle. The deployment system gives it memory across machines.
+
+## Why Open-Source?
+
+The private repo has private details — machine names, network config, service-specific skills. The [public version](https://github.com/RooseveltAdvisors/pai-claude-config) strips all of that and keeps what's universally useful: the CLAUDE.md template, a sanitized deploy.sh, and 27 skills that work in any context.
+
+My reason for open-sourcing it: if this setup saves you the weekend I spent figuring it out, that's worthwhile. PAI is public. The 4-layer model is public. The deployment layer is the piece that was missing from either resource.
+
+If you build on it, I'd genuinely like to know. The interesting problems are in the specialization — how you adapt the skills to your stack, which commands you write for your workflows, what your justfile looks like after a few months of real use.
+
+## Production Details
+
+- **Start with PAI first.** Install `danielmiessler/Personal_AI_Infrastructure` and use it for a week before adding a deployment layer. You'll learn which pieces matter to you.
+- **Don't fork — template.** The public repo is a starting point, not a product. Your CLAUDE.md should reflect your stack, your machines, your preferences. Copy the structure; rewrite the content.
+- **The deployment mechanism is language-agnostic.** The `deploy.sh` uses rsync. It will work on any Unix system. GitHub Actions runners are easy to set up on any machine with internet access.
+- **Skills that reference your infrastructure are NOT for sharing.** Keep those private. Share the generic ones — code review methodology, research patterns, blog writing guidelines.
+- **Version control is the real unlock.** Once your config is in git, you get diffs on config changes, revert on bad deploys, and a clear history of what you changed and when.
+
+## What I Learned
+
+**Finding a framework for what you're already building is underrated.** I didn't discover PAI and then build toward it. I built independently and then found it. The convergence validated the approach and gave me better vocabulary for things I'd built intuitively.
+
+**Open-sourcing forces clarity.** Writing the public README required me to explain concepts I'd internalized. That process surfaced two design decisions I'd made for wrong reasons and one thing that genuinely wasn't as generalizable as I thought.
+
+**The best infrastructure disappears.** After setting all of this up, I don't think about it. Claude is consistent, my skills are in sync, changes propagate automatically. The goal of the deployment layer is to make itself invisible — and it largely does.
+
+---
+
+*Tools used: [Claude Code](https://claude.ai/download) by Anthropic. Framework: [Personal AI Infrastructure (PAI)](https://github.com/danielmiessler/Personal_AI_Infrastructure) by Daniel Miessler. Architecture: [Indie DevDan's 4-Layer Bowser System](https://www.youtube.com/watch?v=efctPj6bjCY). CI/CD: [GitHub Actions](https://docs.github.com/en/actions). Source: [pai-claude-config](https://github.com/RooseveltAdvisors/pai-claude-config). Built with [Claude Code](https://claude.ai/download) by Anthropic.*

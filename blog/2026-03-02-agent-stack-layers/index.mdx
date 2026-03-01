@@ -1,0 +1,117 @@
+---
+slug: agent-stack-layers
+title: "Skills Are Just the Beginning: The 4-Layer Agent Stack"
+authors: [jon]
+tags: [claude-code, ai, skills, agents, automation, architecture]
+image: /img/blog/2026-03-02-agent-stack-layers/hero-banner.jpg
+---
+
+I kept writing skills. New skill for code review. New skill for deployment. New skill for browser automation. Each one added a capability, and each one stayed a capability — a one-off that I had to consciously reach for. I had a growing vocabulary but no grammar. My automations weren't composing into anything.
+
+The shift came when I watched [Indie DevDan's breakdown](https://www.youtube.com/watch?v=efctPj6bjCY) of Bowser, his browser automation framework. He wasn't talking about a single skill. He was talking about a four-layer architecture: skills at the bottom, agents in the middle, commands as the orchestration layer, and a justfile at the top for reusability. Every layer had a distinct job. Together they formed a system for repeat success — not just one-off automation.
+
+That framing clicked. I'd been building half a stack.
+
+![A diagram showing four stacked layers: Skills, Agents, Commands, and Justfile, with arrows showing data flow upward](/img/blog/2026-03-02-agent-stack-layers/hero-banner.jpg)
+
+{/* truncate */}
+
+## The Insight: Vocabulary Isn't Enough
+
+A skill teaches Claude *what it can do*. It documents a capability, sets constraints, and gives the agent a tool to reach for. That's the foundation. But a skill alone doesn't tell Claude *when* to use it, *in what sequence*, or *how to coordinate with other agents*.
+
+The four-layer model makes that explicit:
+
+| Layer | Role | Example |
+|-------|------|---------|
+| **Skills** | Raw capability | `playwright-bowser` — headless browser control |
+| **Agents** | Scale the skill | `bowser-qa-agent` — UI validation specialist |
+| **Commands** | Orchestrate agents | `ui-review` — fans out parallel QA runs |
+| **Justfile** | Reusability entry point | `just ui-review` — one command to run it all |
+
+Each layer builds on the previous one. You can drop into any layer independently for testing. You compose them for production.
+
+## Layer 1: Skills
+
+Skills are the vocabulary. They document what Claude can do in a given domain — the tools available, the defaults, the constraints.
+
+My `playwright-bowser` skill, for example, configures Claude to use the Playwright CLI for headless browser sessions. The skill sets defaults I've chosen: sessions are named for persistence, screenshots are saved at every step, parallel runs are enabled. The raw Playwright CLI has many options; the skill collapses them into an opinionated, repeatable interface.
+
+The skill doesn't run anything. It gives Claude the capability to run something.
+
+## Layer 2: Agents
+
+Agents scale the skill. A sub-agent is a prompt-engineered specialist that activates a skill and adds a concrete workflow — not just "can browse the web" but "validates user stories against a URL, takes screenshots at each step, and reports pass/fail back to the orchestrator."
+
+This is where things get interesting. An agent can specialize in a specific workflow and be spawned in parallel. Three browser agents running three user stories simultaneously, each returning structured results to the primary agent. That's 3x throughput with no extra engineering cost.
+
+```yaml
+# agents/bowser-qa-agent.md — excerpt
+description: |
+  UI validation agent that executes user stories against web apps
+  and reports pass/fail results with screenshots at every step.
+  Supports parallel instances.
+```
+
+The agent isn't just a skill with a different name. It's a workflow — purpose, variables, steps, output format. It knows what to do with the skill, not just that the skill exists.
+
+## Layer 3: Commands
+
+Commands are the orchestration layer — the API for running agent teams. Dan calls this the "higher-order prompt": a prompt that takes another prompt as input, wraps it in consistent workflow logic, and runs it at scale.
+
+My `ui-review` command discovers all user story files in a project, spawns one bowser-qa-agent per story, waits for all of them to complete, and aggregates the results. The individual agents do the work; the command coordinates them.
+
+```bash
+# /ui-review runs:
+# 1. Glob for *.yaml user stories
+# 2. Spawn one bowser-qa-agent per story (parallel)
+# 3. Collect pass/fail + screenshots
+# 4. Report summary to user
+```
+
+Another example from my stack: `DevFlow`. It's a command that detects which stage of the CI/CD pipeline you're in (branch, commit, push, PR, review, merge) and either advances you to the next stage or blocks you if you've deviated. It uses no special agents — just orchestration logic over git state.
+
+The command layer is where skills stop being capabilities and start being workflows.
+
+## Layer 4: Reusability
+
+The top layer is where you make the whole stack accessible. Dan uses a justfile — a task runner that aliases all your commands into a single discoverable interface:
+
+```bash
+just ui-review        # run all UI tests
+just automate-amazon  # run browser automation
+just blog-summarize   # check latest from favorite blogs
+```
+
+I use a similar pattern in the open-source config. The `just` skill gives Claude access to a project's justfile so it can both run recipes and add new ones. The justfile becomes the index for everything the agent stack can do — legible to humans and callable by agents.
+
+## What This Looks Like in Practice
+
+My `BugBot` skill is a clean example of all four layers:
+
+1. **Skill** — BugBot defines adversarial code review methodology: attack angles, confidence scoring, ODC trigger tracking
+2. **Agent** — The ralph-wiggum agent loop takes one iteration at a time, reads state from disk, picks untried angles
+3. **Command** — `/BugBot` orchestrates the loop: detects changed files, sets up state file, launches the ralph-loop, waits for `ALL_CLEAN`
+4. **Reusability** — `just bugbot` (if configured) kicks the whole thing off from the project root
+
+The skill is the *what*. The agent is the *how*. The command is the *when and in what sequence*. The justfile is the *how do I find it again in six months*.
+
+## Production Details
+
+- **Skills stay generic.** The capability layer should be reusable across projects. Skills that reference specific file paths or service names are brittle — they break the moment the context changes.
+- **Agents carry the workflow specifics.** That's where you encode the concrete steps, output format expectations, and error handling for a particular class of work.
+- **Commands are the right place for parallelization.** Fan-out logic belongs here, not inside agents. An agent should do one thing well; a command coordinates many agents.
+- **The justfile is documentation as much as tooling.** `just` with no arguments prints every available recipe. That's your team's onboarding to what the agent stack can do.
+- **Test layer by layer.** You can invoke any layer directly. If a command isn't working, drop down to the agent. If the agent isn't working, drop to the skill. This is enormously valuable for debugging.
+
+## What I Learned
+
+**Skills alone create a vocabulary; the other layers create a language.** If you've been building skills and wondering why your automation still feels manual, you're probably missing the agent and command layers. Those are where the composability lives.
+
+**Specialization at the agent layer is underrated.** A generic "browser agent" is useful. A "UI validation agent that parses user stories, takes timestamped screenshots, and reports structured pass/fail" is a system. The specificity is the value.
+
+**The four layers aren't overhead — they're the difference between automation and infrastructure.** Infrastructure is what you reach for repeatedly. One-off scripts aren't infrastructure. A four-layer stack, deployed consistently, is.
+
+---
+
+*Tools used: [Claude Code](https://claude.ai/download) by Anthropic. Architecture from [Indie DevDan's 4-Layer Bowser System](https://www.youtube.com/watch?v=efctPj6bjCY) — highly recommended watch. Source: [pai-claude-config](https://github.com/RooseveltAdvisors/pai-claude-config). Built with [Claude Code](https://claude.ai/download) by Anthropic.*
