@@ -1,0 +1,107 @@
+---
+slug: claude-multi-account-load-balancer
+title: "I Built a Load Balancer for My Claude Code Subscriptions"
+authors: [jon]
+tags: [claude-code, open-source, developer-tools, load-balancing, ai]
+image: /img/blog/2026-04-23-claude-multi-account-load-balancer/hero-banner.jpg
+---
+
+I hit my Claude Code rate limit three times last Tuesday. Each time, I had to stop what I was doing, log out, log into a different subscription, and pick up where I left off. The context was gone. The flow was broken. And the other subscription I'd been saving had been sitting idle all day.
+
+I have three Claude Max subscriptions across different accounts. The problem isn't capacity — it's allocation. I was manually rotating between accounts like it was 2003 and I was switching between AOL screen names. So I built a tool to fix it.
+
+![Load balancing across Claude Code subscriptions](/img/blog/2026-04-23-claude-multi-account-load-balancer/hero-banner.jpg)
+
+{/* truncate */}
+
+## The Core Problem
+
+Claude Code stores credentials in `~/.claude/.credentials.json`. One file. One account. If you have multiple subscriptions, you're stuck with a global swap: copy credentials over, restart your session, lose your place. Run two terminals with different accounts? Not possible — they both read the same file.
+
+The real cost isn't the swap itself. It's the context loss. A session with 400K tokens of loaded context, mid-refactor, gone because you hit a rate limit window.
+
+## The Insight: CLAUDE_CONFIG_DIR
+
+Claude Code respects an environment variable called `CLAUDE_CONFIG_DIR`. Point it at a different directory, and that session reads its own credentials file while sharing everything else — settings, skills, memory — via symlinks. This is the entire trick.
+
+Each account gets an isolated config directory:
+
+```
+~/.claude-multi/config/personal/
+├── .credentials.json          # Isolated — this account's token
+├── settings.json → ~/.claude/settings.json   # Shared
+├── skills → ~/.claude/skills                 # Shared
+└── memory → ~/.claude/memory                 # Shared
+```
+
+No global mutation. No race conditions between terminals. Each session is pinned to its account for the duration.
+
+## Load Balancing with SQLite
+
+Per-session isolation solves the concurrency problem. But I still needed to answer: "which account should I use right now?" So I added a load balancer.
+
+Every session records its start time, account, and PID in a local SQLite database. When you type `cl` (the auto-balance alias), the balancer scores each account:
+
+| Factor | Weight | Limit (Max plan) |
+|--------|--------|-------------------|
+| 5-hour burst remaining | 70% | ~4.5 hours |
+| 7-day rolling remaining | 30% | ~30 hours |
+| Active sessions | -2 per session | — |
+| Rate-limited | -100 (instant deprioritize) | — |
+
+The formula is simple: `score = burstRemaining * 0.7 + rollingRemaining * 0.3 - activeSessions * 2`. A rate-limited account drops to -100. The highest score wins.
+
+This isn't sophisticated ML. It's a weighted heuristic that tracks actual usage and makes a reasonable pick. In practice, it distributes load evenly across subscriptions and routes away from rate-limited accounts immediately.
+
+## The Statusline
+
+I also built a truecolor statusline that shows everything at a glance: model name, context window usage, cumulative tokens in/out with per-turn deltas, and rate limit percentages with time-until-reset.
+
+The statusline parses Claude Code's transcript JSONL directly — the same approach the `ccusage` tool uses. It aggregates input and output tokens across the entire session, including subagent sidechains, and color-grades every metric from green through blue and yellow to red as values increase.
+
+One design detail worth noting: Claude Code applies a forced `dimColor` to statusline output. Normal ANSI colors get washed out to near-invisible. The fix is bold truecolor escapes — `\033[1;38;2;R;G;Bm` — which survive the dimming and stay readable. Every color in the palette is intentionally saturated to compensate.
+
+## Getting Started
+
+```bash
+git clone https://github.com/ArcsHealth/claude-multi.git
+cd claude-multi
+./install.sh
+```
+
+The installer copies files to `~/.claude-multi/`, adds a source line to your shell RC, and configures the statusline. Then add your accounts:
+
+```bash
+claude-multi add personal
+claude-multi add work
+
+# Log into each account and save credentials
+claude login
+claude-multi save personal
+
+claude login
+claude-multi save work
+
+# Create isolated config dirs
+claude-multi setup
+```
+
+After that, launch with `cl` to auto-balance, or `cl-personal` / `cl-work` for explicit selection. The shell aliases are generated dynamically from your account list — add a third account and `cl-third` appears automatically.
+
+## Design Decisions
+
+- **Bun, not Node.** The CLI and SQLite tracking run on Bun for fast startup. No `node_modules` to install.
+- **No daemon.** Session tracking uses background `bun run` calls at session start/end. No long-running process to manage.
+- **Token safety.** `save` refuses to overwrite if the live token belongs to a different account. Duplicate detection prevents saving the same token under two names.
+- **Config is a single JSON file.** Account names are stored in `~/.claude-multi/config.json`. Add, remove, done.
+- **No fleet sync in the open-source version.** The internal version syncs credentials to remote machines. The public release focuses on the single-machine workflow.
+
+## What I Learned
+
+Multi-account management for CLI tools is an underserved problem. Cloud CLIs (AWS, GCP, Azure) solved this years ago with named profiles. AI coding assistants haven't caught up yet — probably because most people don't run multiple subscriptions. But if you're using Claude Code heavily enough to hit rate limits, the ROI on a second subscription is immediate, and the tooling to manage it doesn't need to be complex.
+
+The other lesson: `CLAUDE_CONFIG_DIR` is a remarkably clean extension point. One environment variable gives you full credential isolation with zero changes to Claude Code itself. If Anthropic ever adds native multi-account support, the architecture would probably look similar — isolated config directories with shared settings.
+
+---
+
+*Tools used: [Claude Code](https://claude.ai/download) by Anthropic, [Bun](https://bun.sh/) by Oven. Source code: [claude-multi](https://github.com/ArcsHealth/claude-multi).*
